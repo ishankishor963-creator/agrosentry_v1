@@ -1,0 +1,1165 @@
+/* ==========================================================
+   AgroSentry Modern Web Platform — High-Impact Animated Stylesheet
+   Features:
+   - Interactive Bioluminescent Particle Canvas
+   - Liquid Soil Moisture Wave Animation
+   - Rotating Solar Ray Coronas & Dynamic Spectrum Needle
+   - Holographic Glass Shimmer & 3D Interactive Tilt
+   - Multi-Ring ESP32 Sonar Radar Ping
+   - Cybernetic Leaf Scanner HUD with Laser Scan
+   - Liquid Gliding Pill Nav with Spring Physics
+   ========================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --bg-0: #06040f;
+  --bg-1: #0d081b;
+  --panel: rgba(20, 15, 42, 0.72);
+  --panel-solid: #140f2a;
+  --panel-hover: rgba(28, 22, 58, 0.85);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-active: rgba(139, 92, 246, 0.55);
+  --text-hi: #f6f7fd;
+  --text-mid: #b4b3ce;
+  --text-lo: #787595;
+  
+  /* Vibrant Neon Palette */
+  --accent: #8b5cf6;
+  --accent-2: #7c3aed;
+  --accent-glow: rgba(139, 92, 246, 0.45);
+  --cyan: #22d3ee;
+  --cyan-glow: rgba(34, 211, 238, 0.4);
+  --green: #34d399;
+  --green-glow: rgba(52, 211, 153, 0.35);
+  --rose: #f43f8d;
+  --rose-glow: rgba(244, 63, 141, 0.35);
+  --amber: #f59e0b;
+  --amber-glow: rgba(245, 158, 11, 0.35);
+  --solar: #fbbf24;
+  --solar-glow: rgba(251, 191, 36, 0.5);
+
+  /* Radius & Shadows */
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+  --radius-pill: 9999px;
+  --shadow-panel: 0 20px 50px rgba(0, 0, 0, 0.55);
+  --shadow-glow: 0 0 25px var(--accent-glow);
+
+  /* Easing curves */
+  --ease-spring: cubic-bezier(0.34, 1.45, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: radial-gradient(ellipse 140% 100% at 20% -10%, #2e1a54 0%, var(--bg-0) 52%) fixed;
+  color: var(--text-hi);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* Background Particle Canvas */
+#bgCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.65;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-0);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Typography */
+h1, h2, h3, h4, .brand-title {
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: -0.02em;
+  color: var(--text-hi);
+  font-weight: 700;
+}
+
+p, span, label {
+  color: var(--text-mid);
+}
+
+/* App Container */
+.app-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 26px 20px 80px;
+}
+
+/* ----------------- Header & Liquid Pill Nav ----------------- */
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 34px;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  box-shadow: 0 0 28px var(--accent-glow);
+  animation: floatBrand 4s ease-in-out infinite;
+  transition: transform 0.3s var(--ease-spring);
+}
+
+@keyframes floatBrand {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(4deg); }
+}
+
+.brand-wrapper:hover .brand-icon {
+  transform: scale(1.12) rotate(8deg);
+}
+
+.brand-title {
+  font-size: 1.5rem;
+}
+
+.brand-badge {
+  font-size: 0.72rem;
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid var(--border-active);
+  color: var(--cyan);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-left: 8px;
+  box-shadow: 0 0 14px var(--cyan-glow);
+  animation: neonPulse 3s infinite alternate;
+}
+
+@keyframes neonPulse {
+  0% { box-shadow: 0 0 6px var(--cyan-glow); }
+  100% { box-shadow: 0 0 16px var(--cyan-glow); }
+}
+
+/* Liquid Pill Nav Bar */
+.nav-pill-bar {
+  position: relative;
+  display: flex;
+  background: rgba(15, 11, 32, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  padding: 6px;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+}
+
+/* Gliding Indicator */
+.nav-indicator {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  height: calc(100% - 12px);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  box-shadow: 0 4px 24px var(--accent-glow), inset 0 1px 2px rgba(255, 255, 255, 0.35);
+  transition: all 0.35s var(--ease-spring);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.nav-btn {
+  position: relative;
+  z-index: 2;
+  background: transparent;
+  border: none;
+  color: var(--text-mid);
+  padding: 10px 22px;
+  border-radius: var(--radius-pill);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.94rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.25s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.nav-btn:hover {
+  color: var(--text-hi);
+  transform: translateY(-1px);
+}
+
+.nav-btn.active {
+  color: #ffffff;
+}
+
+/* Hardware Status Pill with Sonar Ping */
+.device-pill {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  font-size: 0.86rem;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-spring);
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+}
+
+.device-pill:hover {
+  border-color: var(--cyan);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 211, 238, 0.2);
+}
+
+.status-dot-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 12px var(--green);
+  z-index: 2;
+}
+
+.sonar-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--green);
+  opacity: 0.8;
+  animation: sonarPing 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+  z-index: 1;
+}
+
+@keyframes sonarPing {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+
+.status-dot.amber {
+  background: var(--amber);
+  box-shadow: 0 0 12px var(--amber);
+}
+.sonar-ring.amber {
+  border-color: var(--amber);
+}
+
+/* ----------------- Glass Panels & Holographic Shimmer ----------------- */
+.glass-panel {
+  background: var(--panel);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  box-shadow: var(--shadow-panel);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s var(--ease-spring);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Holographic light sweep on hover */
+.glass-panel::after {
+  content: '';
+  position: absolute;
+  top: -150%;
+  left: -150%;
+  width: 300%;
+  height: 300%;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.035) 45%, rgba(139, 92, 246, 0.08) 50%, transparent 55%);
+  pointer-events: none;
+  opacity: 0;
+  transform: rotate(-15deg);
+  transition: opacity 0.4s ease;
+}
+
+.glass-panel:hover::after {
+  opacity: 1;
+  animation: holographicSweep 2s ease-in-out forwards;
+}
+
+@keyframes holographicSweep {
+  0% { transform: translate(-30%, -30%) rotate(-15deg); }
+  100% { transform: translate(30%, 30%) rotate(-15deg); }
+}
+
+/* ----------------- Metrics with Animated Waves & Sun ----------------- */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-bottom: 34px;
+}
+
+.metric-card {
+  background: rgba(22, 16, 46, 0.62);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s var(--ease-spring), border-color 0.3s ease, box-shadow 0.35s ease;
+  transform-style: preserve-3d;
+}
+
+.metric-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: var(--border-active);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--cyan));
+}
+
+.metric-card.solar-card::before {
+  background: linear-gradient(90deg, var(--solar), var(--amber));
+}
+
+.metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 2;
+}
+
+.metric-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-mid);
+}
+
+.metric-icon {
+  font-size: 1.45rem;
+}
+
+.metric-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.35rem;
+  font-weight: 700;
+  color: var(--text-hi);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+.metric-unit {
+  font-size: 1.15rem;
+  color: var(--text-lo);
+  font-weight: 500;
+}
+
+.metric-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: var(--radius-pill);
+  margin-top: 14px;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.badge-optimal {
+  background: rgba(52, 211, 153, 0.16);
+  color: var(--green);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.15);
+}
+
+.badge-warning {
+  background: rgba(245, 158, 11, 0.16);
+  color: var(--amber);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.15);
+}
+
+.badge-danger {
+  background: rgba(244, 63, 141, 0.16);
+  color: var(--rose);
+  border: 1px solid rgba(244, 63, 141, 0.35);
+  box-shadow: 0 0 12px rgba(244, 63, 141, 0.15);
+}
+
+.badge-solar {
+  background: rgba(251, 191, 36, 0.16);
+  color: var(--solar);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  box-shadow: 0 0 14px var(--solar-glow);
+}
+
+/* 🌊 Animated Liquid Water Wave for Soil Moisture Card */
+.wave-canvas-bg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 55%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.35;
+  transition: height 0.8s var(--ease-spring);
+}
+
+.wave-svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  fill: url(#waveGradient);
+  animation: waveMotion 6s linear infinite;
+}
+
+@keyframes waveMotion {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ☀️ Animated Solar Ray Flare for Light Sensor Card */
+.solar-flare-bg {
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--solar-glow) 0%, transparent 70%);
+  pointer-events: none;
+  animation: solarPulse 4s ease-in-out infinite alternate;
+  z-index: 1;
+}
+
+.solar-rays {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 110px;
+  height: 110px;
+  border: 2px dashed rgba(251, 191, 36, 0.35);
+  border-radius: 50%;
+  animation: rotateSolar 18s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes solarPulse {
+  0% { transform: scale(0.9); opacity: 0.4; }
+  100% { transform: scale(1.3); opacity: 0.85; }
+}
+
+@keyframes rotateSolar {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ----------------- Staggered View Cascades ----------------- */
+.view-section {
+  display: none;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.38s var(--ease-smooth), transform 0.38s var(--ease-smooth);
+}
+
+.view-section.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.view-section.active .metric-card:nth-child(1) { animation: cascadeUp 0.4s var(--ease-smooth) 0.03s both; }
+.view-section.active .metric-card:nth-child(2) { animation: cascadeUp 0.4s var(--ease-smooth) 0.07s both; }
+.view-section.active .metric-card:nth-child(3) { animation: cascadeUp 0.4s var(--ease-smooth) 0.11s both; }
+.view-section.active .metric-card:nth-child(4) { animation: cascadeUp 0.4s var(--ease-smooth) 0.15s both; }
+.view-section.active .glass-panel { animation: cascadeUp 0.45s var(--ease-smooth) 0.1s both; }
+
+@keyframes cascadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.section-header {
+  margin-bottom: 28px;
+}
+
+.section-header h2 {
+  font-size: 1.75rem;
+  margin-bottom: 6px;
+}
+
+/* ----------------- Disease Scanner UI ----------------- */
+.scanner-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+@media (max-width: 960px) {
+  .scanner-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sub-tabs {
+  position: relative;
+  display: flex;
+  background: rgba(14, 10, 30, 0.75);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  margin-bottom: 22px;
+  border: 1px solid var(--border);
+}
+
+.sub-tab-indicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  height: calc(100% - 8px);
+  border-radius: 10px;
+  background: var(--panel-solid);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  transition: all 0.32s var(--ease-spring);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sub-tab-btn {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-mid);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sub-tab-btn.active {
+  color: var(--text-hi);
+}
+
+/* Live Camera Box */
+.camera-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #020108;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+#cameraVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Cyber Reticle with Animated Corner Brackets */
+.camera-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reticle-frame {
+  width: 72%;
+  height: 72%;
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  position: relative;
+  box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.38);
+  transition: all 0.35s var(--ease-spring);
+}
+
+.reticle-frame::before, .reticle-frame::after {
+  content: '';
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: var(--cyan);
+  border-style: solid;
+  box-shadow: 0 0 14px var(--cyan-glow);
+}
+.reticle-frame::before {
+  top: -2px;
+  left: -2px;
+  border-width: 3px 0 0 3px;
+  border-top-left-radius: 12px;
+}
+.reticle-frame::after {
+  bottom: -2px;
+  right: -2px;
+  border-width: 0 3px 3px 0;
+  border-bottom-right-radius: 12px;
+}
+
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--cyan) 50%, transparent 100%);
+  box-shadow: 0 0 16px var(--cyan);
+  animation: laserScan 2.4s infinite ease-in-out;
+}
+
+@keyframes laserScan {
+  0% { top: 0%; opacity: 0.75; }
+  50% { top: 98%; opacity: 1; }
+  100% { top: 0%; opacity: 0.75; }
+}
+
+.camera-controls {
+  display: flex;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+/* Drop Zone */
+.drop-zone {
+  border: 2px dashed rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-md);
+  padding: 48px 20px;
+  text-align: center;
+  cursor: pointer;
+  background: rgba(16, 12, 34, 0.45);
+  transition: all 0.35s var(--ease-spring);
+}
+
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent);
+  background: rgba(139, 92, 246, 0.12);
+  transform: scale(1.015);
+  box-shadow: 0 10px 30px var(--accent-glow);
+}
+
+.preview-box {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  display: none;
+  position: relative;
+}
+
+.preview-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 26px;
+  border-radius: var(--radius-pill);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.28s var(--ease-spring);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 24px var(--accent-glow);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px var(--accent-glow);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-hi);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Results Card */
+.result-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 420px;
+  text-align: center;
+  color: var(--text-lo);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: 30px;
+}
+
+.result-content {
+  display: none;
+  animation: cascadeUp 0.45s var(--ease-smooth) both;
+}
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 14px;
+}
+
+.result-title {
+  font-size: 1.65rem;
+  margin-bottom: 16px;
+  color: var(--text-hi);
+}
+
+.confidence-container {
+  margin-bottom: 24px;
+}
+
+.progress-track {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--accent), var(--cyan));
+  width: 0%;
+  transition: width 1s var(--ease-smooth);
+}
+
+.progress-fill.healthy {
+  background: linear-gradient(90deg, var(--green), #10b981);
+  box-shadow: 0 0 16px var(--green-glow);
+}
+
+.progress-fill.disease {
+  background: linear-gradient(90deg, var(--amber), var(--rose));
+  box-shadow: 0 0 16px var(--rose-glow);
+}
+
+.ranking-list {
+  background: rgba(14, 10, 28, 0.6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 22px;
+}
+
+.ranking-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 0.88rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.ranking-item:last-child {
+  border-bottom: none;
+}
+
+.advice-box {
+  background: rgba(24, 19, 48, 0.55);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  margin-top: 14px;
+}
+
+.advice-box h4 {
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ----------------- LIGHT SENSOR STATION ----------------- */
+.spectrum-box {
+  margin: 22px 0 10px;
+}
+
+.spectrum-track {
+  position: relative;
+  height: 16px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, 
+    #3b82f6 0%,    /* Dim / Blue */
+    #34d399 28%,   /* Vegetative */
+    #f59e0b 65%,   /* Full Sun */
+    #ef4444 100%   /* Scorching */
+  );
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 0 15px rgba(251, 191, 36, 0.2);
+  margin-bottom: 10px;
+}
+
+.spectrum-needle {
+  position: absolute;
+  top: -5px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid var(--solar);
+  box-shadow: 0 0 18px var(--solar-glow);
+  transform: translateX(-50%);
+  transition: left 0.85s var(--ease-spring);
+}
+
+.spectrum-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: var(--text-lo);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.photon-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.photon-stat-card {
+  background: rgba(14, 10, 28, 0.65);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.25s var(--ease-spring);
+}
+.photon-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--solar);
+}
+
+.photon-stat-val {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--solar);
+  margin: 4px 0;
+}
+
+/* ----------------- Alerts View ----------------- */
+.alert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.alert-card {
+  border-radius: var(--radius-md);
+  padding: 26px;
+  background: rgba(22, 17, 44, 0.72);
+  border: 1px solid var(--border);
+  transition: transform 0.3s var(--ease-spring);
+}
+.alert-card:hover {
+  transform: translateY(-3px);
+}
+
+.alert-card.critical {
+  border-color: var(--rose);
+  box-shadow: 0 0 30px var(--rose-glow);
+}
+
+.alert-card.warning {
+  border-color: var(--amber);
+  box-shadow: 0 0 30px var(--amber-glow);
+}
+
+.alert-card.normal {
+  border-color: rgba(52, 211, 153, 0.35);
+}
+
+.forecast-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.forecast-item {
+  background: rgba(16, 12, 34, 0.65);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  text-align: center;
+  transition: transform 0.25s var(--ease-spring);
+}
+.forecast-item:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-active);
+}
+
+/* ----------------- AI Chatbot ----------------- */
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  height: 560px;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  animation: cascadeUp 0.3s var(--ease-smooth) both;
+}
+
+.chat-bubble.bot {
+  align-self: flex-start;
+  background: rgba(28, 22, 58, 0.88);
+  border: 1px solid var(--border);
+  border-top-left-radius: 2px;
+}
+
+.chat-bubble.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent) 100%);
+  color: #ffffff;
+  border-top-right-radius: 2px;
+  box-shadow: 0 4px 20px var(--accent-glow);
+}
+
+.chat-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.chat-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 0.82rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s var(--ease-spring);
+}
+
+.chat-chip:hover {
+  background: var(--accent);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.chat-input-bar {
+  display: flex;
+  gap: 10px;
+  padding: 16px 20px;
+  background: rgba(14, 10, 28, 0.95);
+  border-top: 1px solid var(--border);
+}
+
+.chat-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 12px 22px;
+  color: var(--text-hi);
+  font-family: inherit;
+  font-size: 0.92rem;
+  outline: none;
+  transition: border-color 0.25s ease;
+}
+
+.chat-input:focus {
+  border-color: var(--accent);
+}
+
+/* Spinner Overlay */
+.spinner-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 6, 18, 0.82);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-md);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 10;
+}
+
+.loader-ring {
+  width: 52px;
+  height: 52px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Modal */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-backdrop.active {
+  display: flex;
+}
+
+.modal-card {
+  width: 90%;
+  max-width: 480px;
+  background: var(--panel-solid);
+  border: 1px solid var(--border-active);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  animation: cascadeUp 0.3s var(--ease-spring) both;
+}
