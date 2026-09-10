@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroSentry — Edge-AI Smart Farm & Disease Detection Platform</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20%22100%22%20%22100%22><text y=%22.9em%22 font-size=%2290%22>🌾</text></svg>">
+</head>
+<body>
+  <!-- Interactive Bioluminescent Background Particle Canvas -->
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="app-container">
+    <!-- Top Header & Liquid Pill Navigation -->
+    <header class="top-header">
+      <div class="brand-wrapper">
+        <div class="brand-icon">🌾</div>
+        <div>
+          <div style="display: flex; align-items: center;">
+            <h1 class="brand-title">AgroSentry</h1>
+            <span class="brand-badge">v2.0 Cyber-Farm</span>
+          </div>
+          <p style="font-size: 0.82rem; margin-top: -2px;">Edge-AI Agronomy & IoT Telemetry</p>
+        </div>
+      </div>
+
+      <!-- Liquid Navigation Pill Bar -->
+      <nav class="nav-pill-bar" id="navPillBar" aria-label="Main Navigation">
+        <div class="nav-indicator" id="navIndicator"></div>
+        <button class="nav-btn active" data-view="dashboard"><span>🌾</span> Dashboard</button>
+        <button class="nav-btn" data-view="scanner"><span>🔬</span> Disease Scan</button>
+        <button class="nav-btn" data-view="sensors"><span>🌡️</span> Sensors & Light</button>
+        <button class="nav-btn" data-view="alerts"><span>🚨</span> Alerts</button>
+        <button class="nav-btn" data-view="assistant"><span>🤖</span> AI Bot</button>
+      </nav>
+
+      <!-- Hardware Status Pill with Live Sonar Ping -->
+      <div class="device-pill" id="deviceStatusPill" title="Click to view ESP32 (192.168.31.57) connection options">
+        <div class="status-dot-wrapper">
+          <div class="sonar-ring" id="sonarRing"></div>
+          <div class="status-dot" id="deviceDot"></div>
+        </div>
+        <span id="deviceText">ESP32 (192.168.31.57)</span>
+      </div>
+    </header>
+
+    <!-- ================= VIEW: DASHBOARD ================= -->
+    <main id="view-dashboard" class="view-section active">
+      <div class="section-header">
+        <h2>Farm Operations Overview</h2>
+        <p>Live telemetry from ESP32 at <code>192.168.31.57</code> and edge-AI diagnostic intelligence.</p>
+      </div>
+
+      <!-- Telemetry Strip (with Liquid Wave & Solar Flare animations) -->
+      <div class="metric-grid">
+        <!-- Metric 1: Soil Moisture with Liquid Undulating Wave -->
+        <div class="metric-card" id="cardMoisture">
+          <div class="wave-canvas-bg" id="moistureWaveBox" style="height: 48%;">
+            <svg class="wave-svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="waveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="rgba(34, 211, 238, 0.4)" />
+                  <stop offset="100%" stop-color="rgba(139, 92, 246, 0.85)" />
+                </linearGradient>
+              </defs>
+              <path d="M0,20 C150,80 350,-20 500,40 C650,100 900,0 1200,30 L1200,120 L0,120 Z"></path>
+            </svg>
+          </div>
+          <div class="metric-header">
+            <span class="metric-title">Root Zone Moisture</span>
+            <span class="metric-icon">💧</span>
+          </div>
+          <div class="metric-value"><span id="valMoisture">--</span><span class="metric-unit">%</span></div>
+          <div class="metric-badge badge-optimal" id="badgeMoisture">● Optimal Range</div>
+        </div>
+
+        <!-- Metric 2: Ambient Temperature -->
+        <div class="metric-card" id="cardTemp">
+          <div class="metric-header">
+            <span class="metric-title">Canopy Temperature</span>
+            <span class="metric-icon">🌡️</span>
+          </div>
+          <div class="metric-value"><span id="valTemp">--</span><span class="metric-unit">°C</span></div>
+          <div class="metric-badge badge-optimal" id="badgeTemp">● Ideal Range</div>
+        </div>
+
+        <!-- Metric 3: Relative Humidity -->
+        <div class="metric-card" id="cardHumidity">
+          <div class="metric-header">
+            <span class="metric-title">Relative Humidity</span>
+            <span class="metric-icon">💨</span>
+          </div>
+          <div class="metric-value"><span id="valHumidity">--</span><span class="metric-unit">%</span></div>
+          <div class="metric-badge badge-optimal">● Steady Transpiration</div>
+        </div>
+
+        <!-- Metric 4: Dedicated Light Sensor with Rotating Solar Rays & Pulsing Corona -->
+        <div class="metric-card solar-card" id="cardLight">
+          <div class="solar-flare-bg"></div>
+          <div class="solar-rays"></div>
+          <div class="metric-header">
+            <span class="metric-title">Solar Radiation (Light)</span>
+            <span class="metric-icon">☀️</span>
+          </div>
+          <div class="metric-value"><span id="valLight">--</span><span class="metric-unit">Lux</span></div>
+          <div class="metric-badge badge-solar" id="badgeLight">● Full Photosynthesis</div>
+        </div>
+      </div>
+
+      <!-- Fast Action Feature Panels with 3D Tilt Effect -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+        <div class="glass-panel" style="cursor: pointer;" data-goto="scanner">
+          <div style="font-size: 2.3rem; margin-bottom: 12px;">🔬</div>
+          <h3 style="margin-bottom: 8px;">AI Disease Scanner</h3>
+          <p style="margin-bottom: 18px;">Zero-latency leaf diagnosis running your 55-class MobileNetV2 model with camera reticle guidance.</p>
+          <button class="btn btn-primary">Launch Scanner →</button>
+        </div>
+
+        <div class="glass-panel" style="cursor: pointer;" data-goto="sensors">
+          <div style="font-size: 2.3rem; margin-bottom: 12px;">☀️</div>
+          <h3 style="margin-bottom: 8px;">Light & Telemetry Station</h3>
+          <p style="margin-bottom: 18px;">Inspect ambient lux, PPFD photosynthetically active radiation, and daily light integral (DLI).</p>
+          <button class="btn btn-secondary">Analyze Light Spectrum →</button>
+        </div>
+
+        <div class="glass-panel" style="cursor: pointer;" data-goto="assistant">
+          <div style="font-size: 2.3rem; margin-bottom: 12px;">🤖</div>
+          <h3 style="margin-bottom: 8px;">Smart Farm Assistant</h3>
+          <p style="margin-bottom: 18px;">Instant AI agronomic consultation for disease remedies, light requirements, and watering schedules.</p>
+          <button class="btn btn-secondary">Chat with Bot →</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- ================= VIEW: DISEASE SCANNER ================= -->
+    <section id="view-scanner" class="view-section">
+      <div class="section-header">
+        <h2>🔬 Crop Disease Diagnostic Studio</h2>
+        <p>Instant plant pathogen classification powered by MobileNetV2 (55 PlantVillage categories).</p>
+      </div>
+
+      <div class="scanner-container">
+        <!-- Input Panel (Camera or Upload) -->
+        <div class="glass-panel" style="position: relative;">
+          <!-- Liquid Sub-Tabs -->
+          <div class="sub-tabs" id="subTabsBar">
+            <div class="sub-tab-indicator" id="subTabIndicator"></div>
+            <button class="sub-tab-btn active" id="tabCameraBtn"><span>📷</span> Live Camera Viewfinder</button>
+            <button class="sub-tab-btn" id="tabUploadBtn"><span>📁</span> Upload Leaf Photo</button>
+          </div>
+
+          <!-- Mode 1: WebRTC Live Camera with Cyber Reticle -->
+          <div id="cameraMode">
+            <div class="camera-box">
+              <video id="cameraVideo" playsinline autoplay muted></video>
+              <div class="camera-overlay">
+                <div class="reticle-frame">
+                  <div class="scan-line"></div>
+                </div>
+              </div>
+            </div>
+            <div class="camera-controls">
+              <button class="btn btn-primary" id="snapBtn" style="flex: 2;">
+                <span>📸</span> Capture & Diagnose
+              </button>
+              <button class="btn btn-secondary" id="switchCamBtn" title="Flip Camera">
+                <span>🔄</span> Flip
+              </button>
+            </div>
+          </div>
+
+          <!-- Mode 2: File Upload -->
+          <div id="uploadMode" style="display: none;">
+            <div class="drop-zone" id="dropZone">
+              <span style="font-size: 3.2rem; margin-bottom: 12px; display: block;">🌱</span>
+              <h4 style="margin-bottom: 6px;">Drag & Drop leaf photo here</h4>
+              <p style="font-size: 0.88rem;">or click to browse JPG, PNG, WEBP files</p>
+              <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            </div>
+
+            <div class="preview-box" id="previewBox">
+              <img id="previewImg" alt="Selected leaf preview">
+            </div>
+
+            <div class="camera-controls" style="margin-top: 18px;">
+              <button class="btn btn-primary" id="analyzeUploadBtn" style="flex: 2;">
+                <span>🔍</span> Analyze Leaf
+              </button>
+              <button class="btn btn-secondary" id="clearUploadBtn">
+                <span>✕</span> Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- Processing Spinner Overlay -->
+          <div class="spinner-overlay" id="scannerSpinner">
+            <div class="loader-ring"></div>
+            <p id="spinnerText" style="color: #ffffff; font-weight: 600; font-size: 0.95rem;">Analyzing Leaf...</p>
+          </div>
+        </div>
+
+        <!-- Output / Diagnosis Results Panel -->
+        <div class="glass-panel" id="resultsPanel">
+          <div class="result-placeholder" id="resultPlaceholder">
+            <div style="font-size: 3.5rem; margin-bottom: 12px; opacity: 0.45;">🍃</div>
+            <h3>No Leaf Analyzed Yet</h3>
+            <p style="max-width: 320px; font-size: 0.88rem; margin-top: 8px;">
+              Align a single crop leaf within the camera reticle or upload a photo to generate an instant diagnosis.
+            </p>
+          </div>
+
+          <!-- Populated Results -->
+          <div class="result-content" id="resultContent">
+            <div id="resultBadge" class="result-badge badge-optimal">
+              <span>●</span> Healthy Plant
+            </div>
+
+            <h3 class="result-title" id="resultTitle">Tomato — Healthy</h3>
+
+            <!-- Confidence Meter -->
+            <div class="confidence-container">
+              <div class="confidence-header">
+                <span style="font-weight: 500;">Diagnostic Confidence</span>
+                <strong id="resultConfidence" style="font-family: 'Space Grotesk'; font-size: 1.15rem; color: var(--cyan);">98.4%</strong>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill healthy" id="progressFill"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-lo); margin-top: 6px;">
+                <span id="inferenceBadge">⚡ MobileNetV2 Edge Model</span>
+                <span>55 Crop Classes</span>
+              </div>
+            </div>
+
+            <!-- Differential Diagnoses Ranking -->
+            <div class="ranking-list">
+              <div style="font-size: 0.82rem; color: var(--text-lo); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">
+                Differential Probabilities (Top 3)
+              </div>
+              <div id="rankingContainer"></div>
+            </div>
+
+            <!-- Clinical Pathology Description -->
+            <div class="advice-box" style="border-left-color: var(--cyan);">
+              <h4><span>📖</span> Clinical Pathology Overview</h4>
+              <p id="clinicalDescription">Loading description...</p>
+            </div>
+
+            <!-- Agronomic Treatment Plan -->
+            <div class="advice-box" style="border-left-color: var(--green);">
+              <h4><span>🛡️</span> Recommended Agronomic Protocol</h4>
+              <p id="agronomicTreatment">Loading treatment...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW: SENSORS & LIGHT ================= -->
+    <section id="view-sensors" class="view-section">
+      <div class="section-header">
+        <h2>🌡️ Sensor Telemetry & Light Station</h2>
+        <p>Telemetry stream connecting to your ESP32 at <code>192.168.31.57</code>.</p>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="metric-grid">
+        <div class="metric-card">
+          <span class="metric-title">Root Zone Moisture</span>
+          <div class="metric-value"><span id="sensorMoisture">--</span><span class="metric-unit">%</span></div>
+          <p style="font-size: 0.82rem; margin-top: 8px;">Target: 40% – 65% for vegetables</p>
+        </div>
+        <div class="metric-card">
+          <span class="metric-title">Canopy Temperature</span>
+          <div class="metric-value"><span id="sensorTemp">--</span><span class="metric-unit">°C</span></div>
+          <p style="font-size: 0.82rem; margin-top: 8px;">Optimal photosynthetic range</p>
+        </div>
+        <div class="metric-card">
+          <span class="metric-title">Relative Humidity</span>
+          <div class="metric-value"><span id="sensorHumidity">--</span><span class="metric-unit">%</span></div>
+          <p style="font-size: 0.82rem; margin-top: 8px;">Ideal transpiration rates</p>
+        </div>
+        <div class="metric-card solar-card">
+          <span class="metric-title">Ambient Light (Lux)</span>
+          <div class="metric-value"><span id="sensorLight">--</span><span class="metric-unit">Lux</span></div>
+          <p style="font-size: 0.82rem; margin-top: 8px;">Photoperiod radiation</p>
+        </div>
+      </div>
+
+      <!-- Dedicated Light Sensor Station -->
+      <div class="glass-panel" style="margin-top: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="display: flex; align-items: center; gap: 8px;">
+              <span>☀️</span> Solar Irradiance & Photoperiod Health
+            </h3>
+            <p style="font-size: 0.88rem; margin-top: 2px;">Real-time light spectrum reading from your ESP32 (LDR or BH1750 sensor).</p>
+          </div>
+          <div class="metric-badge badge-solar" id="lightConditionBadge">● Optimal Sunlight</div>
+        </div>
+
+        <!-- Light Spectrum Bar with Live Moving Needle -->
+        <div class="spectrum-box">
+          <div class="spectrum-track">
+            <div class="spectrum-needle" id="spectrumNeedle" style="left: 55%;"></div>
+          </div>
+          <div class="spectrum-labels">
+            <span>Dim / Overcast (&lt;10k)</span>
+            <span>Vegetative (15k–30k)</span>
+            <span>Peak Sun (35k–65k)</span>
+            <span>Scorching (&gt;75k Lux)</span>
+          </div>
+        </div>
+
+        <!-- Photon & DLI Breakdown -->
+        <div class="photon-stats">
+          <div class="photon-stat-card">
+            <span style="font-size: 0.8rem; color: var(--text-lo); text-transform: uppercase;">Photosynthetic Photon Flux (PPFD)</span>
+            <div class="photon-stat-val" id="valPPFD">--</div>
+            <p style="font-size: 0.78rem;">µmol / m² / s (PAR radiation)</p>
+          </div>
+          <div class="photon-stat-card">
+            <span style="font-size: 0.8rem; color: var(--text-lo); text-transform: uppercase;">Daily Light Integral (DLI)</span>
+            <div class="photon-stat-val" id="valDLI">--</div>
+            <p style="font-size: 0.78rem;">mol / m² / day (Total cumulative light)</p>
+          </div>
+        </div>
+
+        <!-- Agronomic Light Guidance -->
+        <div class="advice-box" style="border-left-color: var(--solar); margin-top: 20px;">
+          <h4><span>💡</span> Agronomic Light Guidance</h4>
+          <p id="lightAdvice">Loading solar irradiance analysis...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW: ALERTS ================= -->
+    <section id="view-alerts" class="view-section">
+      <div class="section-header">
+        <h2>🚨 Early Weather & Hazard Warnings</h2>
+        <p>Predictive analysis cross-referencing soil moisture, light stress, and rainfall forecasts.</p>
+      </div>
+
+      <div class="alert-grid">
+        <!-- Drought Card -->
+        <div class="alert-card normal" id="droughtCard">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="display: flex; align-items: center; gap: 8px;"><span>🌵</span> Drought Stress Risk</h3>
+            <span class="metric-badge badge-optimal" id="droughtBadge">NORMAL</span>
+          </div>
+          <p id="droughtDesc" style="font-size: 0.92rem; margin-bottom: 14px;">
+            Soil moisture is adequate for normal transpiration. No immediate water deficit detected.
+          </p>
+          <div style="font-size: 0.8rem; color: var(--text-lo);">Threshold: Alert triggered if soil &lt; 30%</div>
+        </div>
+
+        <!-- Flood Card -->
+        <div class="alert-card normal" id="floodCard">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="display: flex; align-items: center; gap: 8px;"><span>🌊</span> Flood & Saturation Risk</h3>
+            <span class="metric-badge badge-optimal" id="floodBadge">NORMAL</span>
+          </div>
+          <p id="floodDesc" style="font-size: 0.92rem; margin-bottom: 14px;">
+            Drainage canals functioning normally. Ground saturation within safe absorption levels.
+          </p>
+          <div style="font-size: 0.8rem; color: var(--text-lo);">Threshold: Alert triggered if soil &gt; 85%</div>
+        </div>
+
+        <!-- Solar Heat & Leaf Scorch Risk -->
+        <div class="alert-card normal" id="solarCard">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="display: flex; align-items: center; gap: 8px;"><span>☀️</span> Radiation & Scorch Risk</h3>
+            <span class="metric-badge badge-optimal" id="solarBadge">NORMAL</span>
+          </div>
+          <p id="solarDesc" style="font-size: 0.92rem; margin-bottom: 14px;">
+            Solar irradiance within safe bounds. Photosynthetic machinery protected from thermal breakdown.
+          </p>
+          <div style="font-size: 0.8rem; color: var(--text-lo);">Threshold: Alert triggered if Lux &gt; 75,000</div>
+        </div>
+      </div>
+
+      <div class="glass-panel" style="margin-top: 24px;">
+        <h3 style="margin-bottom: 8px;">4-Day Rainfall Probability Outlook</h3>
+        <p style="font-size: 0.88rem; margin-bottom: 16px;">Forecast synchronized with regional meteorological radar.</p>
+        
+        <div class="forecast-strip">
+          <div class="forecast-item">
+            <div style="font-size: 0.85rem; color: var(--text-lo);">Today</div>
+            <div style="font-size: 1.4rem; margin: 4px 0;">🌤️</div>
+            <strong style="color: var(--text-hi);">28°C</strong>
+            <div style="font-size: 0.8rem; color: var(--cyan); margin-top: 4px;">15% Rain</div>
+          </div>
+          <div class="forecast-item">
+            <div style="font-size: 0.85rem; color: var(--text-lo);">Tomorrow</div>
+            <div style="font-size: 1.4rem; margin: 4px 0;">⛅</div>
+            <strong style="color: var(--text-hi);">26°C</strong>
+            <div style="font-size: 0.8rem; color: var(--cyan); margin-top: 4px;">35% Rain</div>
+          </div>
+          <div class="forecast-item">
+            <div style="font-size: 0.85rem; color: var(--text-lo);">Day 3</div>
+            <div style="font-size: 1.4rem; margin: 4px 0;">🌧️</div>
+            <strong style="color: var(--text-hi);">23°C</strong>
+            <div style="font-size: 0.8rem; color: var(--rose); margin-top: 4px;">70% Rain</div>
+          </div>
+          <div class="forecast-item">
+            <div style="font-size: 0.85rem; color: var(--text-lo);">Day 4</div>
+            <div style="font-size: 1.4rem; margin: 4px 0;">☀️</div>
+            <strong style="color: var(--text-hi);">27°C</strong>
+            <div style="font-size: 0.8rem; color: var(--cyan); margin-top: 4px;">20% Rain</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW: AI ASSISTANT ================= -->
+    <section id="view-assistant" class="view-section">
+      <div class="section-header">
+        <h2>🤖 Agronomic AI Consultation</h2>
+        <p>Interactive agricultural copilot for pest management, disease remedies, and crop planning.</p>
+      </div>
+
+      <div class="glass-panel" style="padding: 0; overflow: hidden;">
+        <div class="chat-window">
+          <div class="chat-messages" id="chatMessages">
+            <div class="chat-bubble bot">
+              👋 <strong>Greetings, Farmer!</strong> I am your AgroSentry AI advisor. How can I help your crops today? 
+              You can ask me about symptoms like leaf blight, fertilizer deficiencies, light requirements, or pest management.
+            </div>
+          </div>
+
+          <div class="chat-chips">
+            <button class="chat-chip">How much sunlight do tomatoes need?</button>
+            <button class="chat-chip">How to treat tomato early blight?</button>
+            <button class="chat-chip">Optimal soil moisture for potatoes</button>
+            <button class="chat-chip">Remedies for spider mites</button>
+          </div>
+
+          <div class="chat-input-bar">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Ask a farming question..." autocomplete="off">
+            <button class="btn btn-primary" id="sendChatBtn" style="padding: 10px 22px;">Send</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Hardware Modal -->
+  <div class="modal-backdrop" id="deviceModal">
+    <div class="modal-card">
+      <h3 style="margin-bottom: 8px;">🔌 ESP32 Connection Status</h3>
+      <p style="font-size: 0.88rem; margin-bottom: 14px;">
+        Target configured IP: <strong style="color: var(--cyan);">http://192.168.31.57</strong>
+      </p>
+      <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; margin-bottom: 16px;">
+        <p style="color: var(--green); margin-bottom: 4px;">● <strong>Pull Mode:</strong> Server automatically queries <code>http://192.168.31.57/data</code></p>
+        <p style="color: var(--cyan);">● <strong>Push Mode:</strong> Your ESP32 can send HTTP POST to <code>http://&lt;PC-IP&gt;:8000/api/telemetry</code></p>
+      </div>
+      <label style="font-size: 0.82rem; color: var(--text-lo); display: block; margin-bottom: 6px;">Device IP Address</label>
+      <input type="text" id="deviceIpInput" value="http://192.168.31.57" placeholder="http://192.168.31.57" style="width: 100%; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; color: #fff; font-family: monospace; margin-bottom: 20px; outline: none;">
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button class="btn btn-secondary" id="closeDeviceBtn">Close</button>
+        <button class="btn btn-primary" id="saveDeviceBtn">Save IP</button>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="snapshotCanvas" style="display: none;"></canvas>
+
+  <script src="/static/js/camera.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
