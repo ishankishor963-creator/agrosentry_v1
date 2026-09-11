@@ -40,7 +40,7 @@ model = load_model()
 if model is None:
     real_error = st.session_state.get("model_load_error", "Unknown error")
     st.warning(
-        f"Couldn't load the model at `model/plant_disease_model.h5`.\n\n"
+        f"Couldn't load the model at `model/plant_model_v4.keras`.\n\n"
         f"**Actual error:** `{real_error}`\n\n"
         "The page still works below for testing the upload/camera flow.",
         icon="⚠️",
