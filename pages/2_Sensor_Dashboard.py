@@ -35,10 +35,13 @@ if latest["source"] == "demo":
         icon="⚠️",
     )
 
-c1, c2, c3 = st.columns(3)
+light_value = latest.get("light_lux")
+
+c1, c2, c3, c4 = st.columns(4)
 c1.metric("Soil Moisture", f"{latest['soil_moisture']}%")
 c2.metric("Humidity", f"{latest['humidity']}%")
 c3.metric("Temperature", f"{latest['temperature']}°C")
+c4.metric("Light", f"{light_value} lux" if light_value is not None else "—")
 st.caption(f"Last updated: {latest['timestamp']} ({latest['source']} data)")
 
 st.divider()
@@ -49,6 +52,8 @@ if len(st.session_state["sensor_history"]) > 1:
     df = pd.DataFrame(st.session_state["sensor_history"])
     fig = go.Figure()
     colors = {"soil_moisture": "#22d3ee", "humidity": "#8b5cf6", "temperature": "#f5b942"}
+    if "light_lux" in df.columns and df["light_lux"].notna().any():
+        colors["light_lux"] = "#fbbf24"
     for col, color in colors.items():
         fig.add_trace(go.Scatter(
             x=df["timestamp"], y=df[col], mode="lines+markers", name=col.replace("_", " ").title(),
