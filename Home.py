@@ -93,4 +93,28 @@ def home():
 
 
 # --- Explicit page registration (replaces implicit pages/ folder discovery) ---
-home_page = st.Page(home, title="Home",
+home_page = st.Page(home, title="Home", icon="🌾", default=True)
+ai_page = st.Page("pages/1_AI_Assistant.py", title="AI Assistant", icon="🤖")
+sensor_page = st.Page("pages/2_Sensor_Dashboard.py", title="Sensor Dashboard", icon="🌡️")
+alerts_page = st.Page("pages/3_Flood_Drought_Alerts.py", title="Flood/Drought Alerts", icon="🚨")
+camera_page = st.Page("pages/4_Camera_Feed.py", title="Camera Feed", icon="📷")
+disease_page = st.Page("pages/5_Disease_Detection.py", title="Disease Detection", icon="🔬")
+pest_page = st.Page("pages/6_Pest_Control.py", title="Pest Control", icon="🐛")
+
+# Registry so the custom top nav (in utils/theme.py) can switch_page() to
+# Home specifically, since it's a callable-based page rather than a file.
+st.session_state["_pages"] = {
+    "home": home_page,
+    "ai": "pages/1_AI_Assistant.py",
+    "sensor": "pages/2_Sensor_Dashboard.py",
+    "alerts": "pages/3_Flood_Drought_Alerts.py",
+    "camera": "pages/4_Camera_Feed.py",
+    "disease": "pages/5_Disease_Detection.py",
+    "pest": "pages/6_Pest_Control.py",
+}
+
+pg = st.navigation(
+    [home_page, ai_page, sensor_page, alerts_page, camera_page, disease_page, pest_page],
+    position="hidden",
+)
+pg.run()
