@@ -1,10 +1,11 @@
+import textwrap
 import streamlit as st
 
 from utils.auth import logout_button, require_login
 from utils.esp_client import get_sensor_data
 from utils.theme import inject_theme, topnav
 
-# --- Auth gate: nothing below this line renders until logged in ---
+# --- Auth gate ---
 require_login()
 
 st.set_page_config(
@@ -14,7 +15,6 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# --- One-time session state defaults ---
 if "esp_base_url" not in st.session_state:
     st.session_state["esp_base_url"] = ""
 
@@ -22,32 +22,26 @@ inject_theme()
 
 
 def render_custom_css():
-    """Injects high-end dark AI SaaS styles, custom glassmorphism, glowing micro-interactions,
-    radar visual keyframes, and custom button styling overrides."""
     st.markdown(
-        """
+        textwrap.dedent("""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-            /* Global Reset & Futuristic Theme */
             html, body, [data-testid="stAppViewContainer"] {
                 background-color: #050608 !important;
                 color: #F9FAFB !important;
                 font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
             }
 
-            /* Hide Streamlit Chrome */
             #MainMenu, header, footer { visibility: hidden; }
             [data-testid="stHeader"] { background-color: transparent !important; }
             .stDeployButton { display: none !important; }
 
-            /* Sidebar Styling */
             [data-testid="stSidebar"] {
                 background-color: #090C12 !important;
                 border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
             }
 
-            /* Eyebrow Labels */
             .eyebrow-text {
                 font-family: 'JetBrains Mono', monospace;
                 font-size: 0.72rem;
@@ -71,7 +65,6 @@ def render_custom_css():
                 box-shadow: 0 0 10px #FF9500;
             }
 
-            /* Typography */
             .hero-title {
                 font-size: 3.4rem;
                 font-weight: 800;
@@ -97,7 +90,6 @@ def render_custom_css():
                 max-width: 580px;
             }
 
-            /* Glassmorphism Containers */
             .glass-card {
                 background: linear-gradient(135deg, rgba(18, 24, 36, 0.6) 0%, rgba(10, 13, 20, 0.85) 100%);
                 backdrop-filter: blur(16px);
@@ -115,7 +107,6 @@ def render_custom_css():
                 box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 149, 0, 0.08);
             }
 
-            /* Futuristic Radar Visual */
             .radar-box {
                 position: relative;
                 width: 100%;
@@ -202,7 +193,6 @@ def render_custom_css():
             .hud-pos-3 { bottom: 22px; left: 22px; }
             .hud-pos-4 { bottom: 22px; right: 22px; }
 
-            /* Custom Badges & Chips */
             .chip {
                 font-family: 'JetBrains Mono', monospace;
                 font-size: 0.68rem;
@@ -214,31 +204,30 @@ def render_custom_css():
                 display: inline-block;
             }
 
-            .chip-green, .badge-green {
+            .chip-green {
                 background: rgba(16, 185, 129, 0.12);
                 color: #10B981;
                 border: 1px solid rgba(16, 185, 129, 0.3);
             }
 
-            .chip-amber, .badge-amber {
+            .chip-amber {
                 background: rgba(245, 158, 11, 0.12);
                 color: #F59E0B;
                 border: 1px solid rgba(245, 158, 11, 0.3);
             }
 
-            .chip-cyan, .badge-cyan {
+            .chip-cyan {
                 background: rgba(6, 182, 212, 0.12);
                 color: #06B6D4;
                 border: 1px solid rgba(6, 182, 212, 0.3);
             }
 
-            .chip-pink, .badge-pink {
+            .chip-pink {
                 background: rgba(236, 72, 153, 0.12);
                 color: #EC4899;
                 border: 1px solid rgba(236, 72, 153, 0.3);
             }
 
-            /* Metric Cards */
             .stat-card {
                 background: linear-gradient(180deg, rgba(18, 24, 36, 0.7) 0%, rgba(13, 16, 22, 0.9) 100%);
                 border: 1px solid rgba(255, 255, 255, 0.07);
@@ -276,7 +265,6 @@ def render_custom_css():
                 margin-top: 0.35rem;
             }
 
-            /* Progress Bar Visualizer */
             .progress-bar-bg {
                 width: 100%;
                 height: 6px;
@@ -293,7 +281,6 @@ def render_custom_css():
                 box-shadow: 0 0 10px rgba(255, 149, 0, 0.4);
             }
 
-            /* Module Cards */
             .module-card {
                 background: linear-gradient(135deg, rgba(18, 24, 36, 0.5) 0%, rgba(10, 13, 20, 0.8) 100%);
                 border: 1px solid rgba(255, 255, 255, 0.07);
@@ -309,25 +296,10 @@ def render_custom_css():
                 margin-bottom: 0.85rem;
             }
 
-            .module-icon {
-                font-size: 1.8rem;
-            }
+            .module-icon { font-size: 1.8rem; }
+            .module-title { font-size: 1.15rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.4rem; }
+            .module-desc { font-size: 0.88rem; color: #9CA3AF; line-height: 1.5; margin-bottom: 1rem; }
 
-            .module-title {
-                font-size: 1.15rem;
-                font-weight: 700;
-                color: #FFFFFF;
-                margin-bottom: 0.4rem;
-            }
-
-            .module-desc {
-                font-size: 0.88rem;
-                color: #9CA3AF;
-                line-height: 1.5;
-                margin-bottom: 1rem;
-            }
-
-            /* Streamlit Native Buttons Override */
             div.stButton > button {
                 background: rgba(255, 255, 255, 0.05) !important;
                 color: #F3F4F6 !important;
@@ -348,24 +320,10 @@ def render_custom_css():
                 transform: translateY(-1px);
             }
 
-            .section-header {
-                margin-top: 2.5rem;
-                margin-bottom: 1.5rem;
-            }
+            .section-header { margin-top: 2.5rem; margin-bottom: 1.5rem; }
+            .section-title { font-size: 1.75rem; font-weight: 700; color: #FFFFFF; letter-spacing: -0.02em; }
+            .section-subtitle { font-size: 0.92rem; color: #9CA3AF; }
 
-            .section-title {
-                font-size: 1.75rem;
-                font-weight: 700;
-                color: #FFFFFF;
-                letter-spacing: -0.02em;
-            }
-
-            .section-subtitle {
-                font-size: 0.92rem;
-                color: #9CA3AF;
-            }
-
-            /* System Footer */
             .system-footer {
                 margin-top: 4rem;
                 padding: 1.5rem 0;
@@ -378,12 +336,7 @@ def render_custom_css():
                 color: #6B7280;
             }
 
-            .footer-status-item {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-            }
-
+            .footer-status-item { display: flex; align-items: center; gap: 6px; }
             .status-dot-active {
                 width: 6px;
                 height: 6px;
@@ -392,23 +345,21 @@ def render_custom_css():
                 box-shadow: 0 0 6px #10B981;
             }
         </style>
-        """,
+        """),
         unsafe_allow_html=True,
     )
 
 
 def render_header():
-    """Renders top navigation bar using custom theme utility."""
     topnav("home")
 
 
 def render_hero():
-    """Renders high-impact cinematic hero section with dual action buttons and CSS visual HUD."""
     col1, col2 = st.columns([1.15, 0.85], gap="large")
 
     with col1:
         st.markdown(
-            """
+            textwrap.dedent("""
             <div style="padding-top: 0.5rem;">
                 <div class="eyebrow-text">AI-POWERED FARM INTELLIGENCE</div>
                 <h1 class="hero-title">Smarter Farming.<br><span>Powered by AI.</span></h1>
@@ -416,7 +367,7 @@ def render_hero():
                     Monitor your crops, understand your environmental risks, and respond to micro-climate anomalies before they affect your agricultural yield.
                 </p>
             </div>
-            """,
+            """),
             unsafe_allow_html=True,
         )
 
@@ -430,7 +381,7 @@ def render_hero():
 
     with col2:
         st.markdown(
-            """
+            textwrap.dedent("""
             <div class="radar-box">
                 <div class="radar-grid"></div>
                 <div class="radar-circle c1"></div>
@@ -452,15 +403,14 @@ def render_hero():
                     <span class="hud-badge-dot"></span> EDGE NODE: ONLINE
                 </div>
             </div>
-            """,
+            """),
             unsafe_allow_html=True,
         )
 
 
 def render_sensor_cards(reading):
-    """Renders 4 custom statistics cards using actual live/demo reading values from get_sensor_data()."""
     st.markdown(
-        """
+        textwrap.dedent("""
         <div class="section-header">
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <div>
@@ -470,7 +420,7 @@ def render_sensor_cards(reading):
                 <span class="chip chip-green">● LIVE MONITORING</span>
             </div>
         </div>
-        """,
+        """),
         unsafe_allow_html=True,
     )
 
@@ -487,7 +437,7 @@ def render_sensor_cards(reading):
 
     with c1:
         st.markdown(
-            f"""
+            textwrap.dedent(f"""
             <div class="stat-card">
                 <div class="stat-label">SOIL MOISTURE</div>
                 <div class="stat-val-row">
@@ -500,13 +450,13 @@ def render_sensor_cards(reading):
                     <span style="color: #10B981;">OPTIMAL</span> FIELD HYDRATION
                 </div>
             </div>
-            """,
+            """),
             unsafe_allow_html=True,
         )
 
     with c2:
         st.markdown(
-            f"""
+            textwrap.dedent(f"""
             <div class="stat-card">
                 <div class="stat-label">HUMIDITY</div>
                 <div class="stat-val-row">
@@ -519,13 +469,13 @@ def render_sensor_cards(reading):
                     BALANCED ATMOSPHERE
                 </div>
             </div>
-            """,
+            """),
             unsafe_allow_html=True,
         )
 
     with c3:
         st.markdown(
-            f"""
+            textwrap.dedent(f"""
             <div class="stat-card">
                 <div class="stat-label">TEMPERATURE</div>
                 <div class="stat-val-row">
@@ -538,13 +488,13 @@ def render_sensor_cards(reading):
                     STABLE CONDITIONS
                 </div>
             </div>
-            """,
+            """),
             unsafe_allow_html=True,
         )
 
     with c4:
         st.markdown(
-            f"""
+            textwrap.dedent(f"""
             <div class="stat-card">
                 <div class="stat-label">SYSTEM DATA SOURCE</div>
                 <div class="stat-val-row">
@@ -554,16 +504,15 @@ def render_sensor_cards(reading):
                     <span class="chip {source_class}">{"ONLINE" if is_live else "SIMULATED"}</span>
                 </div>
             </div>
-            """,
+            """),
             unsafe_allow_html=True,
         )
 
 
 def render_farm_intelligence():
-    """Renders main dashboard diagnostic panel with multi-variable glowing progress bars."""
     st.write("")
     st.markdown(
-        """
+        textwrap.dedent("""
         <div class="glass-card" style="margin-top: 1rem;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
                 <div>
@@ -615,16 +564,15 @@ def render_farm_intelligence():
                 </div>
             </div>
         </div>
-        """,
+        """),
         unsafe_allow_html=True,
     )
 
 
 def render_module_card(col, icon, title, desc, target, badge_label, badge_class, key):
-    """Reusable helper for rendering individual module cards in the dashboard grid."""
     with col:
         st.markdown(
-            f"""
+            textwrap.dedent(f"""
             <div class="module-card">
                 <div>
                     <div class="module-card-header">
@@ -635,7 +583,7 @@ def render_module_card(col, icon, title, desc, target, badge_label, badge_class,
                     <p class="module-desc">{desc}</p>
                 </div>
             </div>
-            """,
+            """),
             unsafe_allow_html=True,
         )
         if st.button(f"Launch {title} →", key=key, use_container_width=True):
@@ -643,9 +591,8 @@ def render_module_card(col, icon, title, desc, target, badge_label, badge_class,
 
 
 def render_modules():
-    """Renders the 6 module cards arranged in a sleek 2x3 grid."""
     st.markdown(
-        """
+        textwrap.dedent("""
         <div class="section-header">
             <div>
                 <div class="eyebrow-text">MODULAR SUITE</div>
@@ -653,99 +600,35 @@ def render_modules():
             </div>
             <div class="section-subtitle">Everything you need to monitor, analyze, and protect your farm.</div>
         </div>
-        """,
+        """),
         unsafe_allow_html=True,
     )
 
     col_row1 = st.columns(3)
     col_row2 = st.columns(3)
 
-    render_module_card(
-        col_row1[0],
-        "🤖",
-        "AI Assistant",
-        "Ask farming questions and receive intelligent recommendations.",
-        "pages/1_AI_Assistant.py",
-        "AI",
-        "chip-cyan",
-        "btn_ai",
-    )
-
-    render_module_card(
-        col_row1[1],
-        "🌡️",
-        "Sensor Dashboard",
-        "Monitor live soil moisture, humidity, temperature, and environmental conditions.",
-        "pages/2_Sensor_Dashboard.py",
-        "LIVE",
-        "chip-green",
-        "btn_sensor",
-    )
-
-    render_module_card(
-        col_row1[2],
-        "🚨",
-        "Flood / Drought Alerts",
-        "Detect climate risks and receive early warnings from sensor trends.",
-        "pages/3_Flood_Drought_Alerts.py",
-        "ALERT",
-        "chip-pink",
-        "btn_alerts",
-    )
-
-    render_module_card(
-        col_row2[0],
-        "📷",
-        "Camera Feed",
-        "Monitor your field visually through the connected camera.",
-        "pages/4_Camera_Feed.py",
-        "VISION",
-        "chip-cyan",
-        "btn_camera",
-    )
-
-    render_module_card(
-        col_row2[1],
-        "🔬",
-        "Disease Detection",
-        "Upload crop leaf photos and identify possible diseases with AI.",
-        "pages/5_Disease_Detection.py",
-        "AI MODEL",
-        "chip-amber",
-        "btn_disease",
-    )
-
-    render_module_card(
-        col_row2[2],
-        "🐛",
-        "Pest Control",
-        "Monitor environmental pest risks and support integrated pest management.",
-        "pages/6_Pest_Control.py",
-        "IPM",
-        "chip-pink",
-        "btn_pest",
-    )
+    render_module_card(col_row1[0], "🤖", "AI Assistant", "Ask farming questions and receive intelligent recommendations.", "pages/1_AI_Assistant.py", "AI", "chip-cyan", "btn_ai")
+    render_module_card(col_row1[1], "🌡️", "Sensor Dashboard", "Monitor live soil moisture, humidity, temperature, and environmental conditions.", "pages/2_Sensor_Dashboard.py", "LIVE", "chip-green", "btn_sensor")
+    render_module_card(col_row1[2], "🚨", "Flood / Drought Alerts", "Detect climate risks and receive early warnings from sensor trends.", "pages/3_Flood_Drought_Alerts.py", "ALERT", "chip-pink", "btn_alerts")
+    render_module_card(col_row2[0], "📷", "Camera Feed", "Monitor your field visually through the connected camera.", "pages/4_Camera_Feed.py", "VISION", "chip-cyan", "btn_camera")
+    render_module_card(col_row2[1], "🔬", "Disease Detection", "Upload crop leaf photos and identify possible diseases with AI.", "pages/5_Disease_Detection.py", "AI MODEL", "chip-amber", "btn_disease")
+    render_module_card(col_row2[2], "🐛", "Pest Control", "Monitor environmental pest risks and support integrated pest management.", "pages/6_Pest_Control.py", "IPM", "chip-pink", "btn_pest")
 
 
 def render_device_status():
-    """Sidebar hardware device connection panel preserving st.session_state['esp_base_url'] logic."""
     with st.sidebar:
         st.markdown(
-            """
+            textwrap.dedent("""
             <div style="padding-bottom: 0.5rem;">
                 <div class="eyebrow-text" style="font-size: 0.65rem;">HARDWARE LINK</div>
                 <h3 style="font-size: 1.1rem; font-weight: 700; color: #FFFFFF; margin: 0;">Device Status</h3>
             </div>
-            """,
+            """),
             unsafe_allow_html=True,
         )
 
         connected = bool(st.session_state.get("esp_base_url", ""))
-        chip = (
-            '<span class="chip chip-green">CONNECTED</span>'
-            if connected
-            else '<span class="chip chip-amber">DEMO MODE</span>'
-        )
+        chip = '<span class="chip chip-green">CONNECTED</span>' if connected else '<span class="chip chip-amber">DEMO MODE</span>'
         st.markdown(chip, unsafe_allow_html=True)
         st.write("")
 
@@ -753,10 +636,7 @@ def render_device_status():
             "ESP32 / Raspberry Pi base URL",
             value=st.session_state["esp_base_url"],
             placeholder="http://192.168.1.42",
-            help=(
-                "The IP address your ESP32/Pi prints over serial when it connects "
-                "to WiFi. Leave blank to run every page in demo mode with sample data."
-            ),
+            help="The IP address your ESP32/Pi prints over serial when it connects to WiFi. Leave blank to run every page in demo mode with sample data.",
         )
 
         if connected:
@@ -769,12 +649,11 @@ def render_device_status():
 
 
 def render_footer(reading):
-    """Renders bottom minimal system operational footer."""
     source = reading.get("source", "demo")
     esp_status = "CONNECTED" if source == "device" else "DEMO MODE"
 
     st.markdown(
-        f"""
+        textwrap.dedent(f"""
         <div class="system-footer">
             <div>AGROSENTRY AI FARM INTELLIGENCE</div>
             <div class="footer-status-item">
@@ -784,19 +663,17 @@ def render_footer(reading):
             <div>ESP32: {esp_status}</div>
             <div>AI ENGINE: READY</div>
         </div>
-        """,
+        """),
         unsafe_allow_html=True,
     )
 
 
 def home():
-    """Homepage entry point assembling all dark AI SaaS UI components."""
     render_custom_css()
     render_device_status()
     render_header()
     render_hero()
 
-    # Pull real or simulated sensor data
     reading = get_sensor_data()
 
     render_sensor_cards(reading)
@@ -814,7 +691,6 @@ camera_page = st.Page("pages/4_Camera_Feed.py", title="Camera Feed", icon="📷"
 disease_page = st.Page("pages/5_Disease_Detection.py", title="Disease Detection", icon="🔬")
 pest_page = st.Page("pages/6_Pest_Control.py", title="Pest Control", icon="🐛")
 
-# Registry for custom top nav switch_page() mapping
 st.session_state["_pages"] = {
     "home": home_page,
     "ai": "pages/1_AI_Assistant.py",
