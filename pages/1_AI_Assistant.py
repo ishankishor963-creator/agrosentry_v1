@@ -1,149 +1,198 @@
+"""
+AgroSentry - AI Farm Assistant
+
+Local sensor-based farm intelligence.
+
+No external AI API is used.
+"""
+
 import streamlit as st
 
 from utils.ai_agent import ai_reply
-from utils.theme import inject_theme, topnav
+from utils.theme import inject_theme
+
+# Existing AgroSentry navigation/auth components.
 from utils.auth import logout_button
 
+try:
+    from utils.theme import topnav
+except ImportError:
+    topnav = None
 
-# ------------------------------------------------------------
-# PAGE SETUP
-# ------------------------------------------------------------
+
+# ---------------------------------------------------------------------
+# Page setup
+# ---------------------------------------------------------------------
+
+st.set_page_config(
+    page_title="AI Farm Assistant | AgroSentry",
+    page_icon="🤖",
+    layout="wide",
+)
 
 inject_theme()
 
-with st.sidebar:
+
+# ---------------------------------------------------------------------
+# Navigation
+# ---------------------------------------------------------------------
+
+try:
     logout_button()
+except Exception:
+    pass
 
-topnav("ai")
+if topnav is not None:
+    try:
+        topnav("ai")
+    except Exception:
+        pass
 
 
-# ------------------------------------------------------------
-# HEADER
-# ------------------------------------------------------------
+# ---------------------------------------------------------------------
+# Page header
+# ---------------------------------------------------------------------
 
-st.title("🤖 AI Farming Assistant")
+st.title("🤖 AI Farm Assistant")
 
 st.caption(
-    "Ask questions about your crops, irrigation, soil, "
-    "weather, pests and plant health."
+    "Local farm intelligence powered by your AgroSentry sensor data."
+)
+
+st.info(
+    "This assistant does not use ChatGPT, Claude, or any external AI API. "
+    "Its recommendations are generated from the latest available farm sensor readings."
 )
 
 
-# ------------------------------------------------------------
-# CHAT HISTORY
-# ------------------------------------------------------------
+# ---------------------------------------------------------------------
+# Session state
+# ---------------------------------------------------------------------
 
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
 
 
-# ------------------------------------------------------------
-# DISPLAY PREVIOUS MESSAGES
-# ------------------------------------------------------------
+# ---------------------------------------------------------------------
+# Suggested questions
+# ---------------------------------------------------------------------
 
-for message in st.session_state["chat_history"]:
+st.markdown("### Ask about your farm")
 
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+suggestions = [
+    "How is my farm?",
+    "Do I need irrigation?",
+    "What is my soil moisture?",
+    "What is the temperature?",
+    "What is the humidity?",
+    "What should I do now?",
+]
 
+cols = st.columns(3)
 
-# ------------------------------------------------------------
-# QUICK QUESTIONS
-# ------------------------------------------------------------
-
-st.markdown("### Quick questions")
-
-col1, col2, col3 = st.columns(3)
-
-quick_question = None
-
-with col1:
-    if st.button(
-        "💧 Should I irrigate?",
-        use_container_width=True,
-    ):
-        quick_question = "Should I irrigate my field?"
-
-with col2:
-    if st.button(
-        "🍃 Why are leaves yellow?",
-        use_container_width=True,
-    ):
-        quick_question = "Why are my crop leaves turning yellow?"
-
-with col3:
-    if st.button(
-        "🐛 Pest problem",
-        use_container_width=True,
-    ):
-        quick_question = "What should I do about pests?"
+for index, suggestion in enumerate(suggestions):
+    with cols[index % 3]:
+        if st.button(
+            suggestion,
+            key=f"assistant_suggestion_{index}",
+            use_container_width=True,
+        ):
+            st.session_state["pending_question"] = suggestion
 
 
-# ------------------------------------------------------------
-# CHAT INPUT
-# ------------------------------------------------------------
+# ---------------------------------------------------------------------
+# Pending suggestion
+# ---------------------------------------------------------------------
 
-question = st.chat_input(
-    "Ask about your farm..."
+pending_question = st.session_state.pop(
+    "pending_question",
+    None,
 )
 
 
-# Quick question takes priority
-if quick_question:
-    question = quick_question
+# ---------------------------------------------------------------------
+# Chat history
+# ---------------------------------------------------------------------
+
+for message in st.session_state["chat_history"]:
+
+    role = message.get("role", "assistant")
+    content = message.get("content", "")
+
+    if role not in ("user", "assistant"):
+        continue
+
+    with st.chat_message(role):
+        st.markdown(content)
 
 
-# ------------------------------------------------------------
-# PROCESS MESSAGE
-# ------------------------------------------------------------
+# ---------------------------------------------------------------------
+# Chat input
+# ---------------------------------------------------------------------
+
+question = st.chat_input(
+    "Ask about your soil, irrigation, temperature, humidity or farm status..."
+)
+
+if question is None and pending_question:
+    question = pending_question
+
+
+# ---------------------------------------------------------------------
+# Process question
+# ---------------------------------------------------------------------
 
 if question:
 
-    # User message
-    st.session_state["chat_history"].append(
-        {
-            "role": "user",
-            "content": question,
-        }
-    )
+    question = question.strip()
 
-    with st.chat_message("user"):
-        st.markdown(question)
+    if question:
 
-    # Previous history excluding current user message
-    history = st.session_state["chat_history"][:-1]
+        # Add user message.
+        st.session_state["chat_history"].append(
+            {
+                "role": "user",
+                "content": question,
+            }
+        )
 
-    # AI response
-    answer = ai_reply(
-        question,
-        history=history,
-    )
+        # Generate local sensor-based answer.
+        answer = ai_reply(
+            question,
+            history=st.session_state["chat_history"][:-1],
+        )
 
-    # Save response
-    st.session_state["chat_history"].append(
-        {
-            "role": "assistant",
-            "content": answer,
-        }
-    )
+        # Add assistant response.
+        st.session_state["chat_history"].append(
+            {
+                "role": "assistant",
+                "content": answer,
+            }
+        )
 
-    with st.chat_message("assistant"):
-        st.markdown(answer)
+        st.rerun()
 
 
-# ------------------------------------------------------------
-# CLEAR CHAT
-# ------------------------------------------------------------
+# ---------------------------------------------------------------------
+# Clear conversation
+# ---------------------------------------------------------------------
 
-if st.session_state["chat_history"]:
+st.divider()
 
-    st.divider()
+clear_col, info_col = st.columns([1, 3])
+
+with clear_col:
 
     if st.button(
         "🗑️ Clear conversation",
-        use_container_width=False,
+        use_container_width=True,
     ):
-
         st.session_state["chat_history"] = []
-
         st.rerun()
+
+with info_col:
+
+    st.caption(
+        "AgroSentry uses deterministic sensor rules for irrigation and "
+        "farm-condition recommendations. It never invents unavailable readings."
+    )
