@@ -42,6 +42,7 @@ def home():
         chip = '<span class="chip chip-green">Connected</span>' if connected else '<span class="chip chip-amber">Demo Mode</span>'
         st.markdown(chip, unsafe_allow_html=True)
         st.write("")
+
         st.session_state["esp_base_url"] = st.text_input(
             "ESP32 / Raspberry Pi base URL",
             value=st.session_state["esp_base_url"],
@@ -56,6 +57,7 @@ def home():
             st.success("Pages will try to fetch live data.")
         else:
             st.info("Pages will show demo data.")
+
         st.divider()
         logout_button()
 
@@ -87,30 +89,8 @@ def home():
     feature_card(row1[2], "🚨", "Flood / Drought Alerts", "Early warnings from sensor trends and rainfall forecast.", "pages/3_Flood_Drought_Alerts.py", "Alerts", "chip-pink")
     feature_card(row2[0], "📷", "Camera Feed", "Live snapshot from your connected field camera.", "pages/4_Camera_Feed.py", "Camera", "chip-cyan")
     feature_card(row2[1], "🔬", "Disease Detection", "Upload a leaf photo to detect crop disease with AI.", "pages/5_Disease_Detection.py", "AI Model", "chip-amber")
+    feature_card(row2[2], "🐛", "Pest Control", "Environmental pest risk + sticky-trap photo counting.", "pages/6_Pest_Control.py", "IPM", "chip-pink")
 
 
 # --- Explicit page registration (replaces implicit pages/ folder discovery) ---
-home_page = st.Page(home, title="Home", icon="🌾", default=True)
-ai_page = st.Page("pages/1_AI_Assistant.py", title="AI Assistant", icon="🤖")
-sensor_page = st.Page("pages/2_Sensor_Dashboard.py", title="Sensor Dashboard", icon="🌡️")
-alerts_page = st.Page("pages/3_Flood_Drought_Alerts.py", title="Flood/Drought Alerts", icon="🚨")
-camera_page = st.Page("pages/4_Camera_Feed.py", title="Camera Feed", icon="📷")
-disease_page = st.Page("pages/5_Disease_Detection.py", title="Disease Detection", icon="🔬")
-
-
-# Registry so the custom top nav (in utils/theme.py) can switch_page() to
-# Home specifically, since it's a callable-based page rather than a file.
-st.session_state["_pages"] = {
-    "home": home_page,
-    "ai": "pages/1_AI_Assistant.py",
-    "sensor": "pages/2_Sensor_Dashboard.py",
-    "alerts": "pages/3_Flood_Drought_Alerts.py",
-    "camera": "pages/4_Camera_Feed.py",
-    "disease": "pages/5_Disease_Detection.py",
-}
-
-pg = st.navigation(
-    [home_page, ai_page, sensor_page, alerts_page, camera_page, disease_page],
-    position="hidden",
-)
-pg.run()
+home_page = st.Page(home, title="Home",
