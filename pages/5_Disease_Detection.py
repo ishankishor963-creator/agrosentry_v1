@@ -9,7 +9,7 @@ st.caption(
     "existing MobileNetV2 model from the plant_disease_modal project."
 )
 
-MODEL_PATH = "model/plant_disease_model.h5"  # copy your trained model here
+MODEL_PATH = "model/plant_model_v4.keras"  # copy your trained model here
 # TODO: replace with your real class list (38 classes from PlantVillage
 # in your original project) in the same order the model was trained on.
 CLASS_NAMES = ["Class_0_placeholder", "Class_1_placeholder", "..."]
