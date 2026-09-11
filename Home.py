@@ -1,4 +1,3 @@
-import textwrap
 import streamlit as st
 
 from utils.auth import logout_button, require_login
@@ -21,9 +20,14 @@ if "esp_base_url" not in st.session_state:
 inject_theme()
 
 
+def render_html(html_str: str):
+    """Strips all leading/trailing line whitespace so Streamlit never converts nested HTML to code blocks."""
+    cleaned = "\n".join(line.strip() for line in html_str.splitlines())
+    st.markdown(cleaned, unsafe_allow_html=True)
+
+
 def render_custom_css():
-    st.markdown(
-        textwrap.dedent("""
+    render_html("""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -345,9 +349,7 @@ def render_custom_css():
                 box-shadow: 0 0 6px #10B981;
             }
         </style>
-        """),
-        unsafe_allow_html=True,
-    )
+    """)
 
 
 def render_header():
@@ -358,8 +360,7 @@ def render_hero():
     col1, col2 = st.columns([1.15, 0.85], gap="large")
 
     with col1:
-        st.markdown(
-            textwrap.dedent("""
+        render_html("""
             <div style="padding-top: 0.5rem;">
                 <div class="eyebrow-text">AI-POWERED FARM INTELLIGENCE</div>
                 <h1 class="hero-title">Smarter Farming.<br><span>Powered by AI.</span></h1>
@@ -367,9 +368,7 @@ def render_hero():
                     Monitor your crops, understand your environmental risks, and respond to micro-climate anomalies before they affect your agricultural yield.
                 </p>
             </div>
-            """),
-            unsafe_allow_html=True,
-        )
+        """)
 
         btn_col1, btn_col2 = st.columns([1, 1])
         with btn_col1:
@@ -380,8 +379,7 @@ def render_hero():
                 st.switch_page("pages/2_Sensor_Dashboard.py")
 
     with col2:
-        st.markdown(
-            textwrap.dedent("""
+        render_html("""
             <div class="radar-box">
                 <div class="radar-grid"></div>
                 <div class="radar-circle c1"></div>
@@ -403,14 +401,11 @@ def render_hero():
                     <span class="hud-badge-dot"></span> EDGE NODE: ONLINE
                 </div>
             </div>
-            """),
-            unsafe_allow_html=True,
-        )
+        """)
 
 
 def render_sensor_cards(reading):
-    st.markdown(
-        textwrap.dedent("""
+    render_html("""
         <div class="section-header">
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <div>
@@ -420,9 +415,7 @@ def render_sensor_cards(reading):
                 <span class="chip chip-green">● LIVE MONITORING</span>
             </div>
         </div>
-        """),
-        unsafe_allow_html=True,
-    )
+    """)
 
     soil = reading.get("soil_moisture", 0)
     humidity = reading.get("humidity", 0)
@@ -436,8 +429,7 @@ def render_sensor_cards(reading):
     c1, c2, c3, c4 = st.columns(4)
 
     with c1:
-        st.markdown(
-            textwrap.dedent(f"""
+        render_html(f"""
             <div class="stat-card">
                 <div class="stat-label">SOIL MOISTURE</div>
                 <div class="stat-val-row">
@@ -450,13 +442,10 @@ def render_sensor_cards(reading):
                     <span style="color: #10B981;">OPTIMAL</span> FIELD HYDRATION
                 </div>
             </div>
-            """),
-            unsafe_allow_html=True,
-        )
+        """)
 
     with c2:
-        st.markdown(
-            textwrap.dedent(f"""
+        render_html(f"""
             <div class="stat-card">
                 <div class="stat-label">HUMIDITY</div>
                 <div class="stat-val-row">
@@ -469,13 +458,10 @@ def render_sensor_cards(reading):
                     BALANCED ATMOSPHERE
                 </div>
             </div>
-            """),
-            unsafe_allow_html=True,
-        )
+        """)
 
     with c3:
-        st.markdown(
-            textwrap.dedent(f"""
+        render_html(f"""
             <div class="stat-card">
                 <div class="stat-label">TEMPERATURE</div>
                 <div class="stat-val-row">
@@ -488,13 +474,10 @@ def render_sensor_cards(reading):
                     STABLE CONDITIONS
                 </div>
             </div>
-            """),
-            unsafe_allow_html=True,
-        )
+        """)
 
     with c4:
-        st.markdown(
-            textwrap.dedent(f"""
+        render_html(f"""
             <div class="stat-card">
                 <div class="stat-label">SYSTEM DATA SOURCE</div>
                 <div class="stat-val-row">
@@ -504,15 +487,12 @@ def render_sensor_cards(reading):
                     <span class="chip {source_class}">{"ONLINE" if is_live else "SIMULATED"}</span>
                 </div>
             </div>
-            """),
-            unsafe_allow_html=True,
-        )
+        """)
 
 
 def render_farm_intelligence():
     st.write("")
-    st.markdown(
-        textwrap.dedent("""
+    render_html("""
         <div class="glass-card" style="margin-top: 1rem;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
                 <div>
@@ -564,15 +544,12 @@ def render_farm_intelligence():
                 </div>
             </div>
         </div>
-        """),
-        unsafe_allow_html=True,
-    )
+    """)
 
 
 def render_module_card(col, icon, title, desc, target, badge_label, badge_class, key):
     with col:
-        st.markdown(
-            textwrap.dedent(f"""
+        render_html(f"""
             <div class="module-card">
                 <div>
                     <div class="module-card-header">
@@ -583,16 +560,13 @@ def render_module_card(col, icon, title, desc, target, badge_label, badge_class,
                     <p class="module-desc">{desc}</p>
                 </div>
             </div>
-            """),
-            unsafe_allow_html=True,
-        )
+        """)
         if st.button(f"Launch {title} →", key=key, use_container_width=True):
             st.switch_page(target)
 
 
 def render_modules():
-    st.markdown(
-        textwrap.dedent("""
+    render_html("""
         <div class="section-header">
             <div>
                 <div class="eyebrow-text">MODULAR SUITE</div>
@@ -600,9 +574,7 @@ def render_modules():
             </div>
             <div class="section-subtitle">Everything you need to monitor, analyze, and protect your farm.</div>
         </div>
-        """),
-        unsafe_allow_html=True,
-    )
+    """)
 
     col_row1 = st.columns(3)
     col_row2 = st.columns(3)
@@ -617,19 +589,16 @@ def render_modules():
 
 def render_device_status():
     with st.sidebar:
-        st.markdown(
-            textwrap.dedent("""
+        render_html("""
             <div style="padding-bottom: 0.5rem;">
                 <div class="eyebrow-text" style="font-size: 0.65rem;">HARDWARE LINK</div>
                 <h3 style="font-size: 1.1rem; font-weight: 700; color: #FFFFFF; margin: 0;">Device Status</h3>
             </div>
-            """),
-            unsafe_allow_html=True,
-        )
+        """)
 
         connected = bool(st.session_state.get("esp_base_url", ""))
         chip = '<span class="chip chip-green">CONNECTED</span>' if connected else '<span class="chip chip-amber">DEMO MODE</span>'
-        st.markdown(chip, unsafe_allow_html=True)
+        render_html(chip)
         st.write("")
 
         st.session_state["esp_base_url"] = st.text_input(
@@ -652,8 +621,7 @@ def render_footer(reading):
     source = reading.get("source", "demo")
     esp_status = "CONNECTED" if source == "device" else "DEMO MODE"
 
-    st.markdown(
-        textwrap.dedent(f"""
+    render_html(f"""
         <div class="system-footer">
             <div>AGROSENTRY AI FARM INTELLIGENCE</div>
             <div class="footer-status-item">
@@ -663,9 +631,7 @@ def render_footer(reading):
             <div>ESP32: {esp_status}</div>
             <div>AI ENGINE: READY</div>
         </div>
-        """),
-        unsafe_allow_html=True,
-    )
+    """)
 
 
 def home():
