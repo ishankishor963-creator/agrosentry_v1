@@ -13,7 +13,7 @@ topnav("disease")
 st.title("🔬 AI Disease Detection")
 st.caption(
     "Upload a leaf photo or capture one with your camera. Runs your "
-    "trained MobileNetV2 model (plant_model_v5)."
+    "trained MobileNetV2 model (plant_model_v4)."
 )
 
 MODEL_PATH = "model/plant_model_v5.keras"  # copy your trained .keras model here
