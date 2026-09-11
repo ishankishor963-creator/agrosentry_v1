@@ -1,10 +1,10 @@
 """
 theme.py
 --------
-Single source of truth for the app's visual theme (dark, pill-nav,
-panel-based — inspired by the Fortexa dashboard reference). Import and
-call `inject_theme()` once at the top of every page, and `topnav(active)`
-right after it to render the pill navigation bar.
+Single source of truth for the app's visual theme (dark, teal/green
+gradient, pill-nav, panel-based). Import and call `inject_theme()` once
+at the top of every page, and `topnav(active)` right after it to render
+the pill navigation bar.
 """
 
 import streamlit as st
@@ -23,24 +23,24 @@ CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 :root {
-    --bg-0: #0a0812;
-    --bg-1: #120f1e;
-    --panel: #161328;
-    --panel-2: #1c1832;
+    --bg-0: #06110d;
+    --bg-1: #0a1712;
+    --panel: #0f1f19;
+    --panel-2: #142a22;
     --border: rgba(255,255,255,0.08);
-    --text-hi: #eef0f7;
-    --text-mid: #b8b7c9;
-    --text-lo: #7d7c94;
-    --accent: #8b5cf6;
-    --accent-2: #6d28d9;
-    --cyan: #22d3ee;
+    --text-hi: #eef7f2;
+    --text-mid: #a9c2b8;
+    --text-lo: #6f8b80;
+    --accent: #22c55e;
+    --accent-2: #0d9488;
+    --cyan: #2dd4bf;
     --pink: #f43f8d;
     --amber: #f5b942;
     --green: #34d399;
 }
 
 html, body, [data-testid="stAppViewContainer"] {
-    background: radial-gradient(ellipse 120% 80% at 20% -10%, #241a3d 0%, var(--bg-0) 45%) fixed;
+    background: radial-gradient(ellipse 120% 80% at 20% -10%, #12352a 0%, var(--bg-0) 45%) fixed;
     color: var(--text-hi);
     font-family: 'Inter', sans-serif;
 }
@@ -83,10 +83,11 @@ h1, h2, h3, h4, .stMarkdown strong { color: var(--text-hi); }
     color: var(--text-hi) !important;
 }
 .stButton>button[kind="primary"] {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%) !important;
+    background: linear-gradient(135deg, var(--cyan) 0%, var(--accent) 55%, var(--accent-2) 100%) !important;
     border: 1px solid transparent !important;
-    color: white !important;
-    box-shadow: 0 0 18px rgba(139,92,246,0.35);
+    color: #06110d !important;
+    font-weight: 600 !important;
+    box-shadow: 0 0 18px rgba(34,197,94,0.35);
 }
 
 /* ---- Top pill nav ---- */
@@ -95,7 +96,7 @@ h1, h2, h3, h4, .stMarkdown strong { color: var(--text-hi); }
     justify-content: center;
     margin-bottom: 1.6rem;
 }
-.fortexa-brand {
+.app-brand {
     display: flex;
     align-items: center;
     gap: 0.6rem;
@@ -105,7 +106,7 @@ h1, h2, h3, h4, .stMarkdown strong { color: var(--text-hi); }
     color: var(--text-hi);
     margin-bottom: 0.2rem;
 }
-.fortexa-brand .dot {
+.app-brand .dot {
     width: 10px; height: 10px; border-radius: 50%;
     background: linear-gradient(135deg, var(--cyan), var(--accent));
     box-shadow: 0 0 10px var(--accent);
@@ -115,7 +116,7 @@ h1, h2, h3, h4, .stMarkdown strong { color: var(--text-hi); }
 div[data-testid="stVerticalBlockBorderWrapper"]:has(div.card-marker) {
     background: linear-gradient(180deg, var(--panel-2) 0%, var(--panel) 100%);
     border: 1px solid var(--border) !important;
-    border-radius: 18px !important;
+    border-radius: 22px !important;
     padding: 0.4rem 0.2rem;
 }
 
@@ -123,7 +124,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(div.card-marker) {
 [data-testid="stMetric"] {
     background: var(--panel-2);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 1rem 1.2rem;
 }
 [data-testid="stMetricLabel"] { color: var(--text-lo) !important; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.06em; }
@@ -131,7 +132,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(div.card-marker) {
 
 /* ---- Alerts / status boxes ---- */
 [data-testid="stAlert"] {
-    border-radius: 14px;
+    border-radius: 16px;
     border: 1px solid var(--border);
     background: var(--panel-2) !important;
 }
@@ -146,8 +147,9 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(div.card-marker) {
     color: var(--text-mid);
 }
 .stTabs [aria-selected="true"] {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%) !important;
-    color: white !important;
+    background: linear-gradient(135deg, var(--cyan) 0%, var(--accent) 100%) !important;
+    color: #06110d !important;
+    font-weight: 600 !important;
     border-color: transparent !important;
 }
 
@@ -155,7 +157,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(div.card-marker) {
 input, textarea, .stTextInput input, .stNumberInput input {
     background: var(--panel-2) !important;
     color: var(--text-hi) !important;
-    border-radius: 10px !important;
+    border-radius: 12px !important;
     border: 1px solid var(--border) !important;
 }
 [data-baseweb="slider"] { padding-top: 0.4rem; }
@@ -174,13 +176,13 @@ hr { border-color: var(--border) !important; }
 .chip-green { background: rgba(52,211,153,0.12); color: var(--green); border-color: rgba(52,211,153,0.3); }
 .chip-amber { background: rgba(245,185,66,0.12); color: var(--amber); border-color: rgba(245,185,66,0.3); }
 .chip-pink { background: rgba(244,63,141,0.12); color: var(--pink); border-color: rgba(244,63,141,0.3); }
-.chip-cyan { background: rgba(34,211,238,0.12); color: var(--cyan); border-color: rgba(34,211,238,0.3); }
+.chip-cyan { background: rgba(45,212,191,0.12); color: var(--cyan); border-color: rgba(45,212,191,0.3); }
 
 /* ---- Chat bubbles ---- */
 [data-testid="stChatMessage"] {
     background: var(--panel-2);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 18px;
 }
 </style>
 """
@@ -191,9 +193,9 @@ def inject_theme():
 
 
 def topnav(active_key: str):
-    """Renders the top pill navigation bar and the Fortexa-style brand mark."""
+    """Renders the top pill navigation bar and the brand mark."""
     st.markdown(
-        '<div class="fortexa-brand"><span class="dot"></span>AgroSentry — Farm Ops</div>',
+        '<div class="app-brand"><span class="dot"></span>AgroEdge — Farm Ops</div>',
         unsafe_allow_html=True,
     )
     # Home is registered as a callable page (not a file), so switch_page needs
