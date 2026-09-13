@@ -1,37 +1,27 @@
 import streamlit as st
-
 from utils.auth import logout_button, require_login
 from utils.esp_client import get_sensor_data
 from utils.theme import inject_theme, topnav
-
 # --- Auth gate: blocks until authenticated ---
 require_login()
-
 st.set_page_config(
     page_title="AgroSentry — Farm Ops",
     page_icon="🌾",
     layout="wide",
     initial_sidebar_state="expanded",
 )
-
 if "esp_base_url" not in st.session_state:
     st.session_state["esp_base_url"] = ""
-
 # Inject base theme
 inject_theme()
-
-
 def render_html(html_str: str):
     """Strips all leading/trailing line whitespace so Streamlit never converts nested HTML to code blocks."""
     cleaned = "\n".join(line.strip() for line in html_str.splitlines())
     st.markdown(cleaned, unsafe_allow_html=True)
-
-
 def render_custom_css():
     render_html("""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
-
             /* ================= BASE ENVIRONMENT & SEAMLESS BACKGROUND ================= */
             :root {
                 --as-bg-black: #050608;
@@ -47,7 +37,6 @@ def render_custom_css():
                 --as-text-white: #FFFFFF;
                 --as-text-muted: #9CA3AF;
             }
-
             html, body, [data-testid="stAppViewContainer"] {
                 background-color: var(--as-bg-black) !important;
                 background-image: 
@@ -64,12 +53,10 @@ def render_custom_css():
                 font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
                 letter-spacing: -0.01em;
             }
-
             /* Hide Streamlit default clutter */
             #MainMenu, header, footer { visibility: hidden; }
             [data-testid="stHeader"] { background-color: transparent !important; }
             .stDeployButton { display: none !important; }
-
             /* ================= SIDEBAR REDESIGN ================= */
             [data-testid="stSidebar"] {
                 background: linear-gradient(180deg, #07090E 0%, #050608 100%) !important;
@@ -79,7 +66,6 @@ def render_custom_css():
             [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
                 gap: 0.85rem !important;
             }
-
             /* ================= TOP NAVIGATION POLISH ================= */
             .brand-nav-container {
                 background: rgba(10, 13, 20, 0.72) !important;
@@ -92,12 +78,10 @@ def render_custom_css():
                 margin-bottom: 0.75rem !important;
                 animation: navSlideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
             }
-
             @keyframes navSlideDown {
                 from { opacity: 0; transform: translateY(-12px); }
                 to { opacity: 1; transform: translateY(0); }
             }
-
             /* ================= UNIVERSAL BUTTON ANIMATION SYSTEM ================= */
             div.stButton > button {
                 background: rgba(255, 255, 255, 0.04) !important;
@@ -117,7 +101,6 @@ def render_custom_css():
                 overflow: hidden !important;
                 width: 100% !important;
             }
-
             /* Hover: Smooth upward move + warm orange gradient + glow */
             div.stButton > button:hover {
                 background: linear-gradient(135deg, rgba(255, 149, 0, 0.95) 0%, rgba(230, 126, 0, 0.95) 100%) !important;
@@ -126,31 +109,26 @@ def render_custom_css():
                 box-shadow: 0 8px 24px rgba(255, 149, 0, 0.35), 0 0 12px rgba(255, 149, 0, 0.2) !important;
                 transform: translateY(-2px) !important;
             }
-
             /* Active / Pressed: Micro scale-down */
             div.stButton > button:active {
                 transform: translateY(0px) scale(0.98) !important;
                 box-shadow: 0 2px 8px rgba(255, 149, 0, 0.25) !important;
                 transition: all 0.08s ease !important;
             }
-
             /* Focus State */
             div.stButton > button:focus-visible {
                 outline: none !important;
                 box-shadow: 0 0 0 2px #050608, 0 0 0 4px rgba(255, 149, 0, 0.6) !important;
             }
-
             /* ================= TYPOGRAPHY & HERO SECTION ================= */
             .hero-container {
                 animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
                 padding-top: 0.5rem;
             }
-
             @keyframes heroFadeIn {
                 from { opacity: 0; transform: translateY(18px); }
                 to { opacity: 1; transform: translateY(0); }
             }
-
             .eyebrow-text {
                 font-family: 'JetBrains Mono', monospace;
                 font-size: 0.72rem;
@@ -167,7 +145,6 @@ def render_custom_css():
                 border-radius: 100px;
                 border: 1px solid rgba(255, 149, 0, 0.22);
             }
-
             .eyebrow-dot {
                 width: 6px;
                 height: 6px;
@@ -176,12 +153,10 @@ def render_custom_css():
                 box-shadow: 0 0 8px #FF9500;
                 animation: pulseGlow 2.5s infinite ease-in-out;
             }
-
             @keyframes pulseGlow {
                 0%, 100% { opacity: 1; transform: scale(1); }
                 50% { opacity: 0.4; transform: scale(0.85); }
             }
-
             .hero-title {
                 font-family: 'Outfit', sans-serif;
                 font-size: 3.5rem;
@@ -193,13 +168,11 @@ def render_custom_css():
                 -webkit-text-fill-color: transparent;
                 margin-bottom: 1.25rem;
             }
-
             .hero-title span {
                 background: linear-gradient(135deg, #FF9500 0%, #F59E0B 50%, #FBBF24 100%);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
             }
-
             .hero-desc {
                 font-size: 1.02rem;
                 color: #9CA3AF;
@@ -208,7 +181,6 @@ def render_custom_css():
                 max-width: 540px;
                 font-weight: 400;
             }
-
             /* ================= HIGH-TECH RADAR HUD ================= */
             .radar-box {
                 position: relative;
@@ -226,12 +198,10 @@ def render_custom_css():
                 box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 0 50px rgba(0, 0, 0, 0.8);
                 animation: radarFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
             }
-
             @keyframes radarFadeIn {
                 from { opacity: 0; transform: scale(0.97); }
                 to { opacity: 1; transform: scale(1); }
             }
-
             .radar-grid {
                 position: absolute;
                 width: 100%;
@@ -241,7 +211,6 @@ def render_custom_css():
                     linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
                 background-size: 26px 26px;
             }
-
             .radar-crosshair-x {
                 position: absolute;
                 width: 100%;
@@ -254,12 +223,10 @@ def render_custom_css():
                 width: 1px;
                 background: rgba(255, 255, 255, 0.06);
             }
-
             .radar-circle {
                 position: absolute;
                 border-radius: 50%;
             }
-
             .radar-circle.c1 {
                 width: 100px;
                 height: 100px;
@@ -275,7 +242,6 @@ def render_custom_css():
                 height: 300px;
                 border: 1px dashed rgba(255, 255, 255, 0.08);
             }
-
             .radar-sweep-beam {
                 position: absolute;
                 width: 300px;
@@ -284,12 +250,10 @@ def render_custom_css():
                 background: conic-gradient(from 0deg, rgba(255, 149, 0, 0.26) 0deg, rgba(255, 149, 0, 0.05) 45deg, transparent 65deg, transparent 360deg);
                 animation: radar-spin 7s linear infinite;
             }
-
             @keyframes radar-spin {
                 from { transform: rotate(0deg); }
                 to { transform: rotate(360deg); }
             }
-
             .radar-center-dot {
                 width: 10px;
                 height: 10px;
@@ -298,7 +262,6 @@ def render_custom_css():
                 box-shadow: 0 0 12px #FF9500, 0 0 24px rgba(255, 149, 0, 0.6);
                 z-index: 5;
             }
-
             .radar-center-ping {
                 position: absolute;
                 width: 10px;
@@ -308,12 +271,10 @@ def render_custom_css():
                 animation: pingEffect 3s cubic-bezier(0, 0, 0.2, 1) infinite;
                 z-index: 4;
             }
-
             @keyframes pingEffect {
                 0% { transform: scale(1); opacity: 0.9; }
                 80%, 100% { transform: scale(4.5); opacity: 0; }
             }
-
             .hud-badge {
                 position: absolute;
                 font-family: 'JetBrains Mono', monospace;
@@ -333,7 +294,6 @@ def render_custom_css():
                 box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
                 z-index: 10;
             }
-
             .hud-badge-dot {
                 width: 6px;
                 height: 6px;
@@ -341,12 +301,10 @@ def render_custom_css():
                 background-color: #10B981;
                 box-shadow: 0 0 6px #10B981;
             }
-
             .hud-pos-1 { top: 20px; left: 20px; }
             .hud-pos-2 { top: 20px; right: 20px; }
             .hud-pos-3 { bottom: 20px; left: 20px; }
             .hud-pos-4 { bottom: 20px; right: 20px; }
-
             /* ================= CHIPS & BADGES ================= */
             .chip {
                 font-family: 'JetBrains Mono', monospace;
@@ -360,31 +318,26 @@ def render_custom_css():
                 align-items: center;
                 gap: 5px;
             }
-
             .chip-green {
                 background: rgba(16, 185, 129, 0.1);
                 color: #10B981;
                 border: 1px solid rgba(16, 185, 129, 0.28);
             }
-
             .chip-amber {
                 background: rgba(245, 158, 11, 0.1);
                 color: #F59E0B;
                 border: 1px solid rgba(245, 158, 11, 0.28);
             }
-
             .chip-cyan {
                 background: rgba(6, 182, 212, 0.1);
                 color: #06B6D4;
                 border: 1px solid rgba(6, 182, 212, 0.28);
             }
-
             .chip-pink {
                 background: rgba(236, 72, 153, 0.1);
                 color: #EC4899;
                 border: 1px solid rgba(236, 72, 153, 0.28);
             }
-
             /* ================= TELEMETRY STAT CARDS ================= */
             .stat-card {
                 background: linear-gradient(145deg, rgba(16, 21, 31, 0.65) 0%, rgba(9, 12, 18, 0.85) 100%);
@@ -397,13 +350,11 @@ def render_custom_css():
                 transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
                 box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
             }
-
             .stat-card:hover {
                 border-color: rgba(255, 149, 0, 0.3);
                 transform: translateY(-3px);
                 box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 149, 0, 0.08);
             }
-
             .stat-label {
                 font-family: 'JetBrains Mono', monospace;
                 font-size: 0.68rem;
@@ -415,13 +366,11 @@ def render_custom_css():
                 align-items: center;
                 justify-content: space-between;
             }
-
             .stat-val-row {
                 display: flex;
                 align-items: baseline;
                 justify-content: space-between;
             }
-
             .stat-value {
                 font-family: 'Outfit', sans-serif;
                 font-size: 2.25rem;
@@ -429,7 +378,6 @@ def render_custom_css():
                 color: #FFFFFF;
                 letter-spacing: -0.025em;
             }
-
             .stat-status {
                 font-size: 0.76rem;
                 font-weight: 600;
@@ -439,7 +387,6 @@ def render_custom_css():
                 align-items: center;
                 gap: 5px;
             }
-
             /* ================= FARM INTELLIGENCE PANEL ================= */
             .glass-card {
                 background: linear-gradient(135deg, rgba(16, 21, 31, 0.6) 0%, rgba(9, 12, 18, 0.85) 100%);
@@ -453,12 +400,10 @@ def render_custom_css():
                 overflow: hidden;
                 box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
             }
-
             .glass-card:hover {
                 border-color: rgba(255, 149, 0, 0.28);
                 box-shadow: 0 16px 44px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 149, 0, 0.06);
             }
-
             .progress-bar-bg {
                 width: 100%;
                 height: 6px;
@@ -467,7 +412,6 @@ def render_custom_css():
                 overflow: hidden;
                 margin-top: 8px;
             }
-
             .progress-bar-fill {
                 height: 100%;
                 border-radius: 100px;
@@ -475,7 +419,6 @@ def render_custom_css():
                 box-shadow: 0 0 10px rgba(255, 149, 0, 0.4);
                 transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
             }
-
             /* ================= MODULE CARDS ================= */
             .module-card {
                 background: linear-gradient(145deg, rgba(16, 21, 31, 0.55) 0%, rgba(9, 12, 18, 0.8) 100%);
@@ -491,25 +434,21 @@ def render_custom_css():
                 flex-direction: column;
                 justify-content: space-between;
             }
-
             .module-card:hover {
                 border-color: rgba(255, 149, 0, 0.32);
                 transform: translateY(-3px);
                 box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 149, 0, 0.07);
             }
-
             .module-card-header {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 margin-bottom: 0.9rem;
             }
-
             .module-icon {
                 font-size: 1.85rem;
                 filter: drop-shadow(0 0 12px rgba(255, 149, 0, 0.25));
             }
-
             .module-title {
                 font-family: 'Outfit', sans-serif;
                 font-size: 1.2rem;
@@ -518,26 +457,22 @@ def render_custom_css():
                 margin-bottom: 0.45rem;
                 letter-spacing: -0.015em;
             }
-
             .module-desc {
                 font-size: 0.88rem;
                 color: #9CA3AF;
                 line-height: 1.55;
                 margin-bottom: 0.5rem;
             }
-
             /* ================= HEADINGS & LAYOUT ================= */
             .section-header {
                 margin-top: 3.5rem;
                 margin-bottom: 1.5rem;
                 animation: sectionFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
             }
-
             @keyframes sectionFade {
                 from { opacity: 0; transform: translateY(14px); }
                 to { opacity: 1; transform: translateY(0); }
             }
-
             .section-title {
                 font-family: 'Outfit', sans-serif;
                 font-size: 1.85rem;
@@ -546,13 +481,11 @@ def render_custom_css():
                 letter-spacing: -0.025em;
                 margin-top: 0.25rem;
             }
-
             .section-subtitle {
                 font-size: 0.94rem;
                 color: #9CA3AF;
                 margin-top: 0.3rem;
             }
-
             /* ================= SYSTEM FOOTER ================= */
             .system-footer {
                 margin-top: 5rem;
@@ -567,13 +500,11 @@ def render_custom_css():
                 font-size: 0.72rem;
                 color: #6B7280;
             }
-
             .footer-status-item {
                 display: flex;
                 align-items: center;
                 gap: 7px;
             }
-
             .status-dot-active {
                 width: 6px;
                 height: 6px;
@@ -582,7 +513,6 @@ def render_custom_css():
                 box-shadow: 0 0 8px #10B981;
                 animation: pulseGlow 2.5s infinite ease-in-out;
             }
-
             /* ================= REDUCED MOTION SUPPORT ================= */
             @media (prefers-reduced-motion: reduce) {
                 *, ::before, ::after {
@@ -593,15 +523,10 @@ def render_custom_css():
             }
         </style>
     """)
-
-
 def render_header():
     topnav("home")
-
-
 def render_hero():
     col1, col2 = st.columns([1.15, 0.85], gap="large")
-
     with col1:
         render_html("""
             <div class="hero-container">
@@ -618,7 +543,6 @@ def render_hero():
                 </p>
             </div>
         """)
-
         btn_col1, btn_col2 = st.columns([1, 1])
         with btn_col1:
             if st.button("🤖 OPEN AI ASSISTANT", key="hero_ai_btn"):
@@ -626,7 +550,6 @@ def render_hero():
         with btn_col2:
             if st.button("🌡️ VIEW SENSORS", key="hero_sensor_btn"):
                 st.switch_page("pages/2_Sensor_Dashboard.py")
-
     with col2:
         render_html("""
             <div class="radar-box">
@@ -654,8 +577,6 @@ def render_hero():
                 </div>
             </div>
         """)
-
-
 def render_sensor_cards(reading):
     render_html("""
         <div class="section-header">
@@ -671,18 +592,14 @@ def render_sensor_cards(reading):
             </div>
         </div>
     """)
-
     soil = reading.get("soil_moisture", 0)
     humidity = reading.get("humidity", 0)
     temp = reading.get("temperature", 0)
     source = reading.get("source", "demo")
-
     is_live = source == "device"
     source_str = "LIVE DEVICE" if is_live else "DEMO MODE"
     source_class = "chip-green" if is_live else "chip-amber"
-
     c1, c2, c3, c4 = st.columns(4)
-
     with c1:
         render_html(f"""
             <div class="stat-card">
@@ -701,7 +618,6 @@ def render_sensor_cards(reading):
                 </div>
             </div>
         """)
-
     with c2:
         render_html(f"""
             <div class="stat-card">
@@ -720,7 +636,6 @@ def render_sensor_cards(reading):
                 </div>
             </div>
         """)
-
     with c3:
         render_html(f"""
             <div class="stat-card">
@@ -739,7 +654,6 @@ def render_sensor_cards(reading):
                 </div>
             </div>
         """)
-
     with c4:
         render_html(f"""
             <div class="stat-card">
@@ -755,8 +669,6 @@ def render_sensor_cards(reading):
                 </div>
             </div>
         """)
-
-
 def render_farm_intelligence():
     st.write("")
     render_html("""
@@ -817,8 +729,6 @@ def render_farm_intelligence():
             </div>
         </div>
     """)
-
-
 def render_module_card(col, icon, title, desc, target, badge_label, badge_class, key):
     with col:
         render_html(f"""
@@ -835,8 +745,6 @@ def render_module_card(col, icon, title, desc, target, badge_label, badge_class,
         """)
         if st.button(f"Launch {title} →", key=key, use_container_width=True):
             st.switch_page(target)
-
-
 def render_modules():
     render_html("""
         <div class="section-header">
@@ -850,18 +758,14 @@ def render_modules():
             <div class="section-subtitle">Everything you need to monitor, analyze, and protect your agricultural ecosystem.</div>
         </div>
     """)
-
     col_row1 = st.columns(3)
     col_row2 = st.columns(3)
-
     render_module_card(col_row1[0], "🤖", "AI Assistant", "Ask farming questions and receive intelligent agronomic recommendations.", "pages/1_AI_Assistant.py", "AI", "chip-cyan", "btn_ai")
     render_module_card(col_row1[1], "🌡️", "Sensor Dashboard", "Monitor live soil moisture, humidity, temperature, and environmental conditions.", "pages/2_Sensor_Dashboard.py", "LIVE", "chip-green", "btn_sensor")
     render_module_card(col_row1[2], "🚨", "Flood / Drought Alerts", "Detect climate risks and receive early warnings from sensor trends.", "pages/3_Flood_Drought_Alerts.py", "ALERT", "chip-pink", "btn_alerts")
     render_module_card(col_row2[0], "📷", "Camera Feed", "Monitor your field visually through the connected edge camera feed.", "pages/4_Camera_Feed.py", "VISION", "chip-cyan", "btn_camera")
     render_module_card(col_row2[1], "🔬", "Disease Detection", "Upload crop leaf photos and identify possible diseases with AI vision models.", "pages/5_Disease_Detection.py", "AI MODEL", "chip-amber", "btn_disease")
     render_module_card(col_row2[2], "🐛", "Pest Control", "Monitor environmental pest risks and support integrated pest management.", "pages/6_Pest_Control.py", "IPM", "chip-pink", "btn_pest")
-
-
 def render_device_status():
     with st.sidebar:
         render_html("""
@@ -875,32 +779,25 @@ def render_device_status():
                 </h3>
             </div>
         """)
-
         connected = bool(st.session_state.get("esp_base_url", ""))
         chip = '<span class="chip chip-green">● CONNECTED</span>' if connected else '<span class="chip chip-amber">● DEMO MODE</span>'
         render_html(chip)
         st.write("")
-
         st.session_state["esp_base_url"] = st.text_input(
             "ESP32 / Raspberry Pi base URL",
             value=st.session_state["esp_base_url"],
             placeholder="http://192.168.1.42",
             help="The IP address your ESP32/Pi prints over serial when it connects to WiFi. Leave blank to run every page in demo mode with sample data.",
         )
-
         if connected:
             st.success("Pages will fetch live edge data.")
         else:
             st.info("Pages will display demo data.")
-
         st.divider()
         logout_button()
-
-
 def render_footer(reading):
     source = reading.get("source", "demo")
     esp_status = "CONNECTED" if source == "device" else "DEMO MODE"
-
     render_html(f"""
         <div class="system-footer">
             <div>AGROSENTRY AI FARM INTELLIGENCE</div>
@@ -912,22 +809,16 @@ def render_footer(reading):
             <div>AI ENGINE: READY</div>
         </div>
     """)
-
-
 def home():
     render_custom_css()
     render_device_status()
     render_header()
     render_hero()
-
     reading = get_sensor_data()
-
     render_sensor_cards(reading)
     render_farm_intelligence()
     render_modules()
     render_footer(reading)
-
-
 # --- Explicit page registration ---
 home_page = st.Page(home, title="Home", icon="🌾", default=True)
 ai_page = st.Page("pages/1_AI_Assistant.py", title="AI Assistant", icon="🤖")
@@ -936,7 +827,6 @@ alerts_page = st.Page("pages/3_Flood_Drought_Alerts.py", title="Flood/Drought Al
 camera_page = st.Page("pages/4_Camera_Feed.py", title="Camera Feed", icon="📷")
 disease_page = st.Page("pages/5_Disease_Detection.py", title="Disease Detection", icon="🔬")
 pest_page = st.Page("pages/6_Pest_Control.py", title="Pest Control", icon="🐛")
-
 st.session_state["_pages"] = {
     "home": home_page,
     "ai": "pages/1_AI_Assistant.py",
@@ -946,7 +836,6 @@ st.session_state["_pages"] = {
     "disease": "pages/5_Disease_Detection.py",
     "pest": "pages/6_Pest_Control.py",
 }
-
 pg = st.navigation(
     [home_page, ai_page, sensor_page, alerts_page, camera_page, disease_page, pest_page],
     position="hidden",
